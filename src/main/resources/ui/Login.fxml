@@ -1,14 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.acme.crm.controllers.LoginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.acme.crm.controllers.LoginController">
     <children>
-        <Button fx:id="button" layoutX="126" layoutY="90" onAction="#handleButtonAction" text="Click Me!" />
-        <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
+        <HBox prefHeight="27.0" prefWidth="600.0">
+            <children>
+                <MenuBar HBox.hgrow="ALWAYS">
+                    <menus>
+                        <Menu disable="true" mnemonicParsing="false" />
+                    </menus>
+                </MenuBar>
+                <MenuBar>
+                    <menus>
+                        <Menu mnemonicParsing="false" text="Language">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="English" />
+                                <MenuItem mnemonicParsing="false" text="Español" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+            </children>
+        </HBox>
+        <VBox layoutX="223.0" layoutY="80.0" prefHeight="23.0" prefWidth="154.0" spacing="10.0">
+            <children>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Login" textAlignment="CENTER" wrappingWidth="153.7578125">
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets bottom="5.0" />
+                    </VBox.margin>
+                </Text>
+                <Label onMouseClicked="#handleUsernameLabelClick" text="Username" />
+                <TextField fx:id="usernameInput" />
+                <Label onMouseClicked="#handlePasswordLabelClick" text="Password" />
+                <PasswordField fx:id="passwordInput" />
+                <Button mnemonicParsing="false" onMouseClicked="#handleLoginButtonClick" prefHeight="27.0" prefWidth="167.0" text="Login">
+                    <VBox.margin>
+                        <Insets top="5.0" />
+                    </VBox.margin>
+                </Button>
+            </children>
+        </VBox>
+        <Text fx:id="errorMessage" fill="RED" layoutY="310.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="600.0" />
     </children>
 </AnchorPane>
