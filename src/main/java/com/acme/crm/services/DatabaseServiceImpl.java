@@ -1,22 +1,23 @@
 package com.acme.crm.services;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
+import javax.inject.Singleton;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
+@Singleton
 public class DatabaseServiceImpl implements DatabaseService {
     
     private static Connection connection;
     private final Properties config;
     
     public DatabaseServiceImpl() throws IOException {
-        FileInputStream fileInputStream = new FileInputStream("database.properties");
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        InputStream fileInputStream = loader.getResourceAsStream("database.properties");
         
         config = new Properties();
         config.load(fileInputStream);
@@ -35,19 +36,11 @@ public class DatabaseServiceImpl implements DatabaseService {
     public void setConnection() throws SQLException {
         MysqlDataSource mysqlDataSource = new MysqlDataSource();
             
-        mysqlDataSource.setURL(config.getProperty("url"));
+        mysqlDataSource.setServerName(config.getProperty("host"));
         mysqlDataSource.setDatabaseName(config.getProperty("name"));
         mysqlDataSource.setUser(config.getProperty("user"));
         mysqlDataSource.setPassword(config.getProperty("password"));
 
         DatabaseServiceImpl.connection = (Connection) mysqlDataSource.getConnection();
-    }
-    
-    @Override
-    public ResultSet query(String query) throws SQLException {
-        Statement stmt = this.getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery(query);
-        
-        return rs;
     }
 }

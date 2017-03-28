@@ -1,7 +1,10 @@
 package com.acme.crm.services;
 
+import javax.inject.Singleton;
+
 import com.acme.crm.entities.UserEntity;
 
+@Singleton
 public class SessionServiceImpl implements SessionService {
     private UserEntity user;
     

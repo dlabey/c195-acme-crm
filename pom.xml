@@ -8,13 +8,14 @@
     <name>acme-crm</name>
     <url>http://maven.apache.org</url>
     <properties>
-        <dagger.version>1.2.5</dagger.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>6.0.6</version>
+            <version>5.1.41</version>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
@@ -22,15 +23,19 @@
             <version>1</version>
         </dependency>
         <dependency>
-            <groupId>com.squareup.dagger</groupId>
-            <artifactId>dagger</artifactId>
-            <version>${dagger.version}</version>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>3.0</version>
         </dependency>
         <dependency>
-            <groupId>com.squareup.dagger</groupId>
-            <artifactId>dagger-compiler</artifactId>
-            <version>${dagger.version}</version>
-            <optional>true</optional>
+            <groupId>com.gluonhq</groupId>
+            <artifactId>ignite-guice</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.8.1</version>
         </dependency>
     </dependencies>
     <build>
