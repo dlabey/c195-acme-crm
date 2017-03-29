@@ -21,6 +21,8 @@ import org.apache.logging.log4j.Logger;
 
 public class LoginController extends MainController implements Initializable {
     
+    private static final Level level = Level.forName("LOGIN", 401);
+    
     private static final Logger logger = LogManager.getLogger(LoginController.class);
     
     @Inject UserDAO userDAO;
@@ -56,9 +58,7 @@ public class LoginController extends MainController implements Initializable {
         final String userName = this.usernameInput.getText();
         final String password = this.passwordInput.getText();
         
-        logger.debug("login");
-        logger.debug(userName);
-        logger.log(Level.forName("LOGIN", 401), userName);
+        logger.debug("Login");
         
         try {
             if (userName.equals("") || password.equals("")) {
@@ -69,7 +69,7 @@ public class LoginController extends MainController implements Initializable {
             
             sessionService.setUser(user);
             
-            logger.log(Level.forName("login", 401), userName);
+            logger.log(level, userName);
             
             // go to customer management
         } catch (InvalidUserException e) {
