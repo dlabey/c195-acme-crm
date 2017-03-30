@@ -10,8 +10,8 @@ import javafx.stage.Stage;
 
 import com.acme.crm.services.DatabaseService;
 import com.acme.crm.services.DatabaseServiceImpl;
-import com.acme.crm.services.SessionService;
-import com.acme.crm.services.SessionServiceImpl;
+import com.acme.crm.services.ContextService;
+import com.acme.crm.services.ContextServiceImpl;
 import com.acme.crm.dao.UserDAO;
 import com.acme.crm.dao.UserDAOImpl;
 
@@ -25,16 +25,23 @@ public class Main extends Application {
     @Inject
     FXMLLoader fxmlLoader;
     
+    @Inject
+    ContextService contextService;
+    
     @Override
     public void start(Stage stage) throws Exception {
         guiceContext.init();
+        
         fxmlLoader.setLocation(getClass().getResource("/ui/Login.fxml"));
         
         Parent login = fxmlLoader.load();
 
-        stage.setTitle("ACME CRM");
+        stage.setTitle("Login");
         stage.setScene(new Scene(login));
         stage.show();
+        
+        contextService.setFXMLLoader(fxmlLoader);
+        contextService.setStage(stage);
     }
 
     public static void main(String[] args) {
@@ -46,7 +53,7 @@ class GuiceModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(DatabaseService.class).to(DatabaseServiceImpl.class);
-        bind(SessionService.class).to(SessionServiceImpl.class);
+        bind(ContextService.class).to(ContextServiceImpl.class);
         
         bind(UserDAO.class).to(UserDAOImpl.class);
     }
