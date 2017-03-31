@@ -1,7 +1,12 @@
 package com.acme.crm.controllers;
 
+import javax.inject.Inject;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -10,7 +15,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
+import com.acme.crm.dao.CityDAO;
+import com.acme.crm.entities.CityEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
+
 public class CustomerController extends MainController implements Initializable {
+    
+    private static final Logger logger = LogManager.getLogger(CustomerController.class);
+    
+    @Inject
+    private CityDAO cityDAO;
     
     @FXML
     protected Text headingText;
@@ -38,7 +55,22 @@ public class CustomerController extends MainController implements Initializable 
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // load cities
+        this.loadCities();
+    }
+    
+    private void loadCities() {
+        try {
+            Set<CityEntity> cities = this.cityDAO.getCities();
+            
+            List<String> cityNames = cities.stream().map(city -> city.getCity())
+                    .collect(Collectors.toList());
+            
+            this.cityInput.setItems(FXCollections.observableList(cityNames));
+        } catch (Exception e) {
+            System.out.println("Exception");
+            System.out.println(e.getMessage());
+            logger.debug(e);
+        }
     }
     
     @FXML

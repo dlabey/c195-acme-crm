@@ -3,6 +3,7 @@ package com.acme.crm.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,8 +20,13 @@ public class ManageController extends MainController implements Initializable {
 
     private static final Logger logger = LogManager.getLogger(ManageController.class);
 
+    private Stage newCustomerStage;
+    
     @Inject
-    ContextService contextService;
+    private Provider<FXMLLoader> loader;
+    
+    @Inject
+    private Provider<NewCustomerController> newCustomerController;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -39,27 +45,26 @@ public class ManageController extends MainController implements Initializable {
     @FXML
     private void handleNewCustomerLink(MouseEvent event) throws Exception {
         logger.debug("handleNewCustomerLink");
-
-        System.out.println("handleNewCustomerLinkClick");
-
-        URL location = getClass().getResource("/ui/Customer.fxml");
-        
-        FXMLLoader fxmlLoader = this.contextService.getFXMLLoader();
-
-        fxmlLoader.setController("com.acme.crm.controllers.NewCustomerController");
-
-        Stage stage = this.contextService.getStage();
-
-        Parent newCustomer = FXMLLoader.load(location);
-
-        stage.hide();
-        stage.setTitle("New Customer");
-        stage.setScene(new Scene(newCustomer));
-        stage.show();
         // 1. open form to enter customer information
         // 2. validate form
         // 3. on success close form and reload data table
         // 4. on error display error
+       
+        if (newCustomerStage == null) {
+            FXMLLoader loader = this.loader.get();
+        
+            loader.setLocation(getClass().getResource("/ui/Customer.fxml"));
+            loader.setController(newCustomerController.get());
+
+            Parent root = loader.load();
+            
+            newCustomerStage = new Stage();
+
+            newCustomerStage.setTitle("New Customer");
+            newCustomerStage.setScene(new Scene(root));
+        }
+        
+        newCustomerStage.show();
     }
 
     @FXML

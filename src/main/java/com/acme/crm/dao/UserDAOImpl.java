@@ -10,7 +10,9 @@ import com.acme.crm.exceptions.InvalidUserException;
 import com.acme.crm.services.DatabaseService;
 
 public class UserDAOImpl implements UserDAO {
-    @Inject private DatabaseService dbService;
+    
+    @Inject
+    private DatabaseService dbService;
     
     @Override
     public UserEntity getUserByUserNameAndPassword(String userName, String password)

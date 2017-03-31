@@ -8,9 +8,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.acme.crm.controllers.LoginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <HBox prefHeight="29.0" prefWidth="350.0">
+        <HBox prefHeight="29.0" prefWidth="400.0">
             <children>
                 <MenuBar>
                     <menus>
@@ -43,27 +43,32 @@
                 </MenuBar>
             </children>
         </HBox>
-        <VBox layoutX="123.0" layoutY="44.0" onKeyPressed="#handleKeyPress" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
+        <VBox layoutX="50.0" layoutY="40.0" prefHeight="544.0" prefWidth="300.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
             <children>
-            <TextFlow textAlignment="CENTER">
-               <children>
-                      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Login">
-                          <font>
-                              <Font name="System Bold" size="18.0" />
-                          </font>
-                      </Text>
-               </children>
-            </TextFlow>
-                <Label onMouseClicked="#handleUsernameLabelClick" text="Username" />
-                <TextField fx:id="usernameInput" />
-                <Label onMouseClicked="#handlePasswordLabelClick" text="Password" />
-                <PasswordField fx:id="passwordInput" />
-                <Button mnemonicParsing="false" onMouseClicked="#handleLogin" text="Login">
+                <Text fx:id="headingText" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer">
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
                     <VBox.margin>
-                        <Insets top="5.0" />
+                        <Insets bottom="5.0" />
                     </VBox.margin>
-                </Button>
-            <TextFlow textAlignment="CENTER">
+                </Text>
+                <Label onMouseClicked="#handleNameLabelClick" text="Name" />
+                <TextField fx:id="nameInput" />
+                <Label onMouseClicked="#handleAddressLabelClick" text="Address" />
+            <TextField fx:id="addressInput" />
+            <Label onMouseClicked="#handleAddress2LabelClick" text="Address 2" />
+            <TextField fx:id="address2Input" promptText="Optional" />
+            <Label onMouseClicked="#handleCityLabelClick" text="City" />
+            <ComboBox fx:id="cityInput" onAction="#handleCitySelect" prefWidth="150.0" />
+            <Label onMouseClicked="#handlePostalCodeLabelClick" text="Postal Code" />
+            <TextField fx:id="postalCodeInput" disable="true" promptText="Select a City" />
+            <Label onMouseClicked="#handleCountryLabelClick" text="Country" />
+            <TextField fx:id="countryInput" disable="true" promptText="Select a City" />
+            <Label onMouseClicked="#handleActiveLabelClick" text="Active" />
+            <CheckBox fx:id="activeInput" mnemonicParsing="false" selected="true" />
+            <Button mnemonicParsing="false" onMouseClicked="#handleSubmit" text="Submit" />
+            <TextFlow prefHeight="200.0" prefWidth="200.0" textAlignment="CENTER">
                <children>
                     <Text fx:id="errorMessage" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" />
                </children>

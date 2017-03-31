@@ -3,14 +3,17 @@ package com.acme.crm.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,6 +24,7 @@ import com.acme.crm.dao.UserDAO;
 import com.acme.crm.entities.UserEntity;
 import com.acme.crm.exceptions.InvalidUserException;
 import com.acme.crm.services.ContextService;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,6 +35,9 @@ public class LoginController extends MainController implements Initializable {
 
     private static final Logger logger = LogManager.getLogger(LoginController.class);
 
+    @Inject
+    private FXMLLoader loader;
+    
     @Inject
     UserDAO userDAO;
 
@@ -64,12 +71,12 @@ public class LoginController extends MainController implements Initializable {
     @FXML
     private void handleKeyPress(KeyEvent event) throws Exception {
         if (event.getCode().equals(KeyCode.ENTER)) {
-            handleLogin(null);
+            handleLogin(event);
         }
     }
 
     @FXML
-    private void handleLogin(MouseEvent event) throws Exception {
+    private void handleLogin(InputEvent event) throws Exception {
         logger.debug("Login");
 
         final String userName = this.usernameInput.getText();
@@ -85,18 +92,16 @@ public class LoginController extends MainController implements Initializable {
             UserEntity user = this.userDAO.getUserByUserNameAndPassword(userName, password);
 
             this.contextService.setUser(user);
-
-            logger.log(level, userName);
-
-            URL location = getClass().getResource("/ui/Manage.fxml");
-
-            Stage stage = this.contextService.getStage();
-
-            Parent manage = FXMLLoader.load(location);
-
-            stage.hide();
+            
+            this.loader.setLocation(getClass().getResource("/ui/Manage.fxml"));
+            
+            Parent root = this.loader.load();
+            
+            ((Node) event.getSource()).getScene().getWindow().hide();
+            
+            Stage stage = new Stage();
             stage.setTitle("Manage");
-            stage.setScene(new Scene(manage));
+            stage.setScene(new Scene(root));
             stage.show();
 //        } catch (InvalidUserException e) {
 //            errorMessage.setText("User invalid error");

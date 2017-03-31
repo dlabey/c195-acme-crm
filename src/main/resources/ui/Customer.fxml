@@ -62,7 +62,7 @@
             <Label onMouseClicked="#handleCityLabelClick" text="City" />
             <ComboBox fx:id="cityInput" onAction="#handleCitySelect" prefWidth="150.0" />
             <Label onMouseClicked="#handlePostalCodeLabelClick" text="Postal Code" />
-            <TextField fx:id="postalCodeInput" disable="true" promptText="Select a City" />
+            <TextField fx:id="postalCodeInput" />
             <Label onMouseClicked="#handleCountryLabelClick" text="Country" />
             <TextField fx:id="countryInput" disable="true" promptText="Select a City" />
             <Label onMouseClicked="#handleActiveLabelClick" text="Active" />
