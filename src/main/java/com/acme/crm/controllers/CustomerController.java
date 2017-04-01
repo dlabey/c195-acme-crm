@@ -2,6 +2,7 @@ package com.acme.crm.controllers;
 
 import javax.inject.Inject;
 import java.net.URL;
+import java.util.function.BooleanSupplier;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -17,8 +18,10 @@ import javafx.util.StringConverter;
 
 import com.acme.crm.dao.CityDAO;
 import com.acme.crm.dao.CountryDAO;
+import com.acme.crm.dao.CustomerDAO;
 import com.acme.crm.entities.CityEntity;
 import com.acme.crm.entities.CountryEntity;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,37 +30,43 @@ public class CustomerController extends MainController implements Initializable 
     private static final Logger logger = LogManager.getLogger(CustomerController.class);
 
     @Inject
-    private CityDAO cityDAO;
+    protected CityDAO cityDAO;
     
     @Inject
-    private CountryDAO countryDAO;
+    protected CountryDAO countryDAO;
+    
+    @Inject
+    protected CustomerDAO customerDAO;
 
     @FXML
     protected Text headingText;
 
     @FXML
-    private TextField nameInput;
+    protected TextField nameInput;
 
     @FXML
-    private TextField addressInput;
+    protected TextField addressInput;
 
     @FXML
-    private TextField address2Input;
+    protected TextField address2Input;
 
     @FXML
-    private ComboBox<CityEntity> cityInput;
+    protected ComboBox<CityEntity> cityInput;
 
     @FXML
-    private TextField postalCodeInput;
+    protected TextField postalCodeInput;
+    
+    @FXML
+    protected TextField phoneInput;
 
     @FXML
-    private TextField countryInput;
+    protected TextField countryInput;
 
     @FXML
-    private CheckBox activeInput;
+    protected CheckBox activeInput;
 
     @FXML
-    private Text errorMessage;
+    protected Text errorMessage;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -138,8 +147,9 @@ public class CustomerController extends MainController implements Initializable 
         }
     }
 
-    @FXML
-    protected void handleSubmit(MouseEvent event) throws Exception {
+    protected void handleSubmit(MouseEvent event, BooleanSupplier childHandler) throws Exception {
+        logger.debug("handleSubmit");
+        
         if (this.nameInput.getText().isEmpty() ||
             this.addressInput.getText().isEmpty() ||
             this.cityInput.getValue() == null ||
@@ -147,7 +157,9 @@ public class CustomerController extends MainController implements Initializable 
             this.countryInput.getText().isEmpty()) {
             throw new Exception("Fields marked with * are required");
         } else {
+            boolean result = childHandler.getAsBoolean();
             
+            logger.debug(result);
         }
     }
 }

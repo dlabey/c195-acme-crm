@@ -21,7 +21,7 @@ public class CustomerDAOImpl implements CustomerDAO {
                 .prepareStatement("INSERT INTO `customer`"
                         + "(customerName, addressId, active, createDate,"
                         + "createdBy, lastUpdate, lastUpdateBy) "
-                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
+                        + "VALUES(?, ?, ?, ?, ?, ?, ?)",
                         Statement.RETURN_GENERATED_KEYS);
         Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
         
