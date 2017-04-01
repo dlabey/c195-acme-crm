@@ -65,7 +65,7 @@
                 </Button>
             <TextFlow textAlignment="CENTER">
                <children>
-                    <Text fx:id="errorMessage" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" />
+                    <Text fx:id="errorMessage" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="*" textAlignment="CENTER" />
                </children>
             </TextFlow>
             </children>

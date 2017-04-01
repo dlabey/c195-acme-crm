@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.acme.crm.dao;
 
-/**
- *
- * @author darren
- */
-public class CustomerDAO {
+import com.acme.crm.entities.AddressEntity;
+import com.acme.crm.entities.CustomerEntity;
+
+public interface CustomerDAO {
     
+    public int createCustomer(String customerName, int addressId,
+            boolean active, String createdBy) throws Exception;
 }

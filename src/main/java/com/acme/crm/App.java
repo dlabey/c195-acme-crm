@@ -14,8 +14,6 @@ public class App {
     public void start(final Stage stage) throws Exception {
         mainLoader.setLocation(getClass().getResource("/ui/Login.fxml"));
         
-        System.out.println(mainLoader);
-        
         Parent root = mainLoader.load();
 
         stage.setTitle("Login");

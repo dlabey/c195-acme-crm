@@ -31,7 +31,7 @@ public class ManageController extends MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         super.initialize(url, rb);
-
+        
         // if there are no customers display No customers
         // if there are no appointments display No appointments
         // if a customer is not selected disable New Appointment

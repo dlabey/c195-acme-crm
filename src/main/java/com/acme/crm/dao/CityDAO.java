@@ -1,11 +1,11 @@
 package com.acme.crm.dao;
 
-import java.util.Set;
+import java.util.List;
 
 import com.acme.crm.entities.CityEntity;
 
 
 public interface CityDAO {
     
-    public Set<CityEntity> getCities() throws Exception;
+    public List<CityEntity> getCities() throws Exception;
 }

@@ -64,13 +64,13 @@
             <Label onMouseClicked="#handlePostalCodeLabelClick" text="Postal Code" />
             <TextField fx:id="postalCodeInput" />
             <Label onMouseClicked="#handleCountryLabelClick" text="Country" />
-            <TextField fx:id="countryInput" disable="true" promptText="Select a City" />
+            <TextField fx:id="countryInput" editable="false" promptText="Select a City" />
             <Label onMouseClicked="#handleActiveLabelClick" text="Active" />
             <CheckBox fx:id="activeInput" mnemonicParsing="false" selected="true" />
             <Button mnemonicParsing="false" onMouseClicked="#handleSubmit" text="Submit" />
             <TextFlow prefHeight="200.0" prefWidth="200.0" textAlignment="CENTER">
                <children>
-                    <Text fx:id="errorMessage" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" />
+                    <Text fx:id="errorMessage" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="*" textAlignment="CENTER" />
                </children>
             </TextFlow>
             </children>

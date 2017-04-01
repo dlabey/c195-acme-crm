@@ -1,20 +1,14 @@
 package com.acme.crm.dao;
 
-import java.util.List;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.List;
+import java.util.LinkedList;
 import javax.inject.Inject;
 
 import com.acme.crm.entities.CityEntity;
-import com.acme.crm.entities.UserEntity;
-import com.acme.crm.exceptions.InvalidUserException;
 import com.acme.crm.services.DatabaseService;
-
-import java.sql.SQLException;
-
-
 
 public class CityDAOImpl implements CityDAO {
     
@@ -22,12 +16,12 @@ public class CityDAOImpl implements CityDAO {
     private DatabaseService dbService;
     
     @Override
-    public Set<CityEntity> getCities() throws SQLException {
+    public List<CityEntity> getCities() throws SQLException {
         Statement stmnt = this.dbService.getConnection().createStatement();
         
         ResultSet rs = stmnt.executeQuery("SELECT * FROM `city` ORDER BY `city`");
         
-        Set<CityEntity> cities = new TreeSet<>();
+        List<CityEntity> cities = new LinkedList<>();
         
         while (rs.next()) {
             CityEntity city = new CityEntity();
@@ -38,6 +32,8 @@ public class CityDAOImpl implements CityDAO {
             city.setCreateDate(rs.getTimestamp("createDate"));
             city.setLastUpdate(rs.getTimestamp("lastUpdate"));
             city.setLastUpdatedBy(rs.getString("lastUpdateBy"));
+            
+            cities.add(city);
         }
         
         return cities;
