@@ -8,8 +8,11 @@ import java.time.LocalDateTime;
 import javax.inject.Inject;
 
 import com.acme.crm.services.DatabaseService;
+import org.apache.logging.log4j.LogManager;
 
 public class AddressDAOImpl implements AddressDAO {
+    
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(AddressDAOImpl.class);
     
     @Inject
     private DatabaseService dbService;
@@ -18,6 +21,9 @@ public class AddressDAOImpl implements AddressDAO {
     public int createAddress(String address, String address2, int cityId,
             String postalCode, String phone, String createdBy)
             throws SQLException {
+        logger.debug("createAddress");
+        logger.debug(address, address2, cityId, postalCode, phone, createdBy);
+        
         PreparedStatement ps = this.dbService.getConnection()
                 .prepareStatement("INSERT INTO `address`"
                         + "(address, address2, cityId, postalCode, phone,"

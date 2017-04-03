@@ -84,7 +84,7 @@ public class LoginController extends MainController implements Initializable {
         final String userName = this.usernameInput.getText();
         final String password = this.passwordInput.getText();
 
-        try {
+        //try {
             if (userName.equals("") || password.equals("")) {
                 throw new InvalidUserException();
             }
@@ -103,14 +103,14 @@ public class LoginController extends MainController implements Initializable {
             stage.setTitle("Manage");
             stage.setScene(new Scene(root));
             stage.show();
-        } catch (InvalidUserException e) {
-            errorMessage.setText("User invalid error");
-
-            logger.debug(e.getMessage());
-        } catch (Exception e) {
-            errorMessage.setText("Application error");
-
-            logger.debug(e.getMessage());
-        }
+//        } catch (InvalidUserException e) {
+//            errorMessage.setText("User invalid error");
+//
+//            logger.debug(e.getMessage());
+//        } catch (Exception e) {
+//            errorMessage.setText("Application error");
+//
+//            logger.debug(e.getMessage());
+//        }
     }
 }

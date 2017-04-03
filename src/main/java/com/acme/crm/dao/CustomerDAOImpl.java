@@ -5,9 +5,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import javax.inject.Inject;
 
+import com.acme.crm.entities.AddressEntity;
+import com.acme.crm.entities.CityEntity;
+import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.services.DatabaseService;
+import java.sql.ResultSet;
 
 public class CustomerDAOImpl implements CustomerDAO {
     
@@ -34,5 +40,54 @@ public class CustomerDAOImpl implements CustomerDAO {
         ps.setString(7, createdBy);
         
         return ps.executeUpdate();
+    }
+    
+    @Override
+    public List<CustomerEntity> getCustomers() throws SQLException {
+        Statement stmnt = this.dbService.getConnection().createStatement();
+        
+        ResultSet rs = stmnt.executeQuery("SELECT * FROM `customer` `c` "
+                + "JOIN `address` `a` ON `a`.`addressId` = `c`.`addressId` "
+                + "JOIN `city` `ci` ON `ci`.`cityId` = `a`.`cityId` "
+                + "JOIN `country` `co` ON `co`.`countryId` = `ci`.`countryId`");
+        
+        List<CustomerEntity> customers = new LinkedList<>();
+        
+        while (rs.next()) {
+            CityEntity city = new CityEntity();
+            city.setCityId(rs.getInt("ci.cityId"));
+            city.setCity(rs.getString("ci.city"));
+            city.setCountryId(rs.getInt("ci.countryId"));
+            city.setCreatedBy(rs.getString("ci.createdBy"));
+            city.setCreateDate(rs.getTimestamp("ci.createDate"));
+            city.setLastUpdate(rs.getTimestamp("ci.lastUpdate"));
+            city.setLastUpdatedBy(rs.getString("ci.lastUpdateBy"));
+            
+            AddressEntity address = new AddressEntity();
+            address.setAddressId(rs.getInt("a.addressId"));
+            address.setAddress(rs.getString("a.address"));
+            address.setAddress2(rs.getString("a.address2"));
+            address.setCity(city);
+            address.setPostalCode(rs.getString("a.postalCode"));
+            address.setPhone(rs.getString("a.phone"));
+            address.setCreateDate(rs.getTimestamp("a.createDate"));
+            address.setCreatedBy(rs.getString("a.createdBy"));
+            address.setLastUpdate(rs.getTimestamp("a.lastUpdate"));
+            address.setLastUpdatedBy(rs.getString("a.lastUpdateBy"));
+            
+            CustomerEntity customer = new CustomerEntity();
+            customer.setCustomerId(rs.getInt("c.customerId"));
+            customer.setCustomerName(rs.getString("c.customerName"));
+            customer.setAddress(address);
+            customer.setActive(rs.getBoolean("c.active"));
+            customer.setCreateDate(rs.getTimestamp("c.createDate"));
+            customer.setCreatedBy(rs.getString("c.createdBy"));
+            customer.setLastUpdate(rs.getTimestamp("c.lastUpdate"));
+            customer.setLastUpdatedBy(rs.getString("c.lastUpdateBy"));
+            
+            customers.add(customer);
+        }
+        
+        return customers;
     }
 }

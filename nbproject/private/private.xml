@@ -12,10 +12,10 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/controllers/ManageController.java</file>
             <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/controllers/CustomerController.java</file>
-            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/controllers/LoginController.java</file>
-            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/controllers/NewCustomerController.java</file>
-            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/dao/AddressDAOImpl.java</file>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/dao/CustomerDAO.java</file>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/dao/CustomerDAOImpl.java</file>
         </group>
     </open-files>
 </project-private>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import org.kordamp.ikonli.javafx.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
@@ -8,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <HBox prefHeight="29.0" prefWidth="400.0">
             <children>
@@ -53,17 +54,38 @@
                         <Insets bottom="5.0" />
                     </VBox.margin>
                 </Text>
-                <Label onMouseClicked="#handleNameLabelClick" text="Name" />
+                <Label contentDisplay="RIGHT" onMouseClicked="#handleNameLabelClick" text="Name">
+               <graphic>
+                  <FontIcon iconLiteral="fa-asterisk" />
+               </graphic></Label>
                 <TextField fx:id="nameInput" />
-                <Label onMouseClicked="#handleAddressLabelClick" text="Address" />
+                <Label contentDisplay="RIGHT" onMouseClicked="#handleAddressLabelClick" text="Address">
+               <graphic>
+                  <FontIcon iconLiteral="fa-asterisk" />
+               </graphic></Label>
             <TextField fx:id="addressInput" />
             <Label onMouseClicked="#handleAddress2LabelClick" text="Address 2" />
             <TextField fx:id="address2Input" promptText="Optional" />
-            <Label onMouseClicked="#handleCityLabelClick" text="City" />
+            <Label contentDisplay="RIGHT" onMouseClicked="#handleCityLabelClick" text="City">
+               <graphic>
+                  <FontIcon iconLiteral="fa-asterisk" />
+               </graphic></Label>
             <ComboBox fx:id="cityInput" onAction="#handleCitySelect" prefWidth="150.0" />
-            <Label onMouseClicked="#handlePostalCodeLabelClick" text="Postal Code" />
+            <Label contentDisplay="RIGHT" onMouseClicked="#handlePostalCodeLabelClick" text="Postal Code">
+               <graphic>
+                  <FontIcon iconLiteral="fa-asterisk" />
+               </graphic></Label>
             <TextField fx:id="postalCodeInput" />
-            <Label onMouseClicked="#handleCountryLabelClick" text="Country" />
+            <Label contentDisplay="RIGHT" onMouseClicked="#handlePhoneLabelClick" text="Phone">
+               <graphic>
+                  <FontIcon iconLiteral="fa-asterisk" />
+               </graphic>
+            </Label>
+            <TextField fx:id="phoneInput" />
+            <Label contentDisplay="RIGHT" onMouseClicked="#handleCountryLabelClick" text="Country">
+               <graphic>
+                  <FontIcon iconLiteral="fa-asterisk" />
+               </graphic></Label>
             <TextField fx:id="countryInput" editable="false" promptText="Select a City" />
             <Label onMouseClicked="#handleActiveLabelClick" text="Active" />
             <CheckBox fx:id="activeInput" mnemonicParsing="false" selected="true" />

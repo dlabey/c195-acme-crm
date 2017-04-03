@@ -21,6 +21,7 @@ import com.acme.crm.dao.CountryDAO;
 import com.acme.crm.dao.CustomerDAO;
 import com.acme.crm.entities.CityEntity;
 import com.acme.crm.entities.CountryEntity;
+import javafx.scene.Node;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -117,6 +118,11 @@ public class CustomerController extends MainController implements Initializable 
     private void handlePostalCodeLabelClick(MouseEvent event) {
         this.postalCodeInput.requestFocus();
     }
+    
+    @FXML
+    private void handlePhoneLabelClick(MouseEvent event) {
+        this.phoneInput.requestFocus();
+    }
 
     @FXML
     private void handleCountryLabelClick(MouseEvent event) {
@@ -154,12 +160,25 @@ public class CustomerController extends MainController implements Initializable 
             this.addressInput.getText().isEmpty() ||
             this.cityInput.getValue() == null ||
             this.postalCodeInput.getText().isEmpty() ||
+            this.phoneInput.getText().isEmpty() ||
             this.countryInput.getText().isEmpty()) {
             throw new Exception("Fields marked with * are required");
         } else {
             boolean result = childHandler.getAsBoolean();
             
             logger.debug(result);
+            
+            if (result) {
+                this.nameInput.clear();
+                this.addressInput.clear();
+                this.address2Input.clear();
+                this.cityInput.getSelectionModel().clearSelection();
+                this.postalCodeInput.clear();
+                this.phoneInput.clear();
+                this.countryInput.clear();
+                
+                ((Node) event.getSource()).getScene().getWindow().hide();
+            }
         }
     }
 }

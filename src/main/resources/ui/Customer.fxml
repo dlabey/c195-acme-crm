@@ -9,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <HBox prefHeight="29.0" prefWidth="400.0">
             <children>
@@ -76,6 +76,12 @@
                   <FontIcon iconLiteral="fa-asterisk" />
                </graphic></Label>
             <TextField fx:id="postalCodeInput" />
+            <Label contentDisplay="RIGHT" onMouseClicked="#handlePhoneLabelClick" text="Phone">
+               <graphic>
+                  <FontIcon iconLiteral="fa-asterisk" />
+               </graphic>
+            </Label>
+            <TextField fx:id="phoneInput" />
             <Label contentDisplay="RIGHT" onMouseClicked="#handleCountryLabelClick" text="Country">
                <graphic>
                   <FontIcon iconLiteral="fa-asterisk" />

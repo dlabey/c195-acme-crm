@@ -56,24 +56,33 @@
                                 <HBox layoutX="14.0" layoutY="-23.0" prefHeight="32.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                     <children>
                                         <Label prefHeight="27.0" text="Select a customer to view their appointments below" />
-                                        <Pane prefHeight="32.0" prefWidth="476.0" />
-                                        <Hyperlink onMouseClicked="#handleNewCustomerLink" prefHeight="27.0" text="New Customer" visited="true">
+                                        <Pane prefHeight="32.0" prefWidth="428.0" />
+                              <Hyperlink onMouseClicked="#handleDeleteCustomerLink" prefHeight="27.0" text="Delete" visited="true">
+                                 <graphic>
+                                    <FontIcon iconLiteral="fa-trash" />
+                                 </graphic>
+                              </Hyperlink>
+                              <Hyperlink onMouseClicked="#handleEditCustomerLink" prefHeight="27.0" text="Edit" visited="true">
+                                 <graphic>
+                                    <FontIcon iconLiteral="fa-pencil" />
+                                 </graphic>
+                              </Hyperlink>
+                                        <Hyperlink onMouseClicked="#handleNewCustomerLink" prefHeight="27.0" text="New" visited="true">
                                             <graphic>
                                                 <FontIcon iconLiteral="fa-user-plus" />
                                             </graphic>
                                         </Hyperlink>
                                     </children>
                                 </HBox>
-                                <TreeTableView layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+                                <TreeTableView fx:id="customersTable" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
                                     <columns>
-                                        <TreeTableColumn maxWidth="75.0" prefWidth="75.0" text="ID" />
-                                        <TreeTableColumn maxWidth="115.0" prefWidth="115.0" text="Name" />
-                                        <TreeTableColumn maxWidth="195.0" prefWidth="195.0" text="Address" />
-                                        <TreeTableColumn maxWidth="120.0" prefWidth="120.0" text="Phone #" />
-                                        <TreeTableColumn maxWidth="75.0" prefWidth="75.0" text="Active" />
-                                        <TreeTableColumn maxWidth="120.0" prefWidth="120.0" text="Created" />
-                                        <TreeTableColumn fx:id="customersTable" maxWidth="120.0" prefWidth="120.0" text="Updated" />
-                                        <TreeTableColumn maxWidth="100.0" prefWidth="100.0" text="Actions" />
+                                        <TreeTableColumn fx:id="customerIdCol" maxWidth="1.7976931348623157E308" prefWidth="75.0" text="ID" />
+                                        <TreeTableColumn fx:id="customerNameCol" maxWidth="1.7976931348623157E308" prefWidth="163.0" text="Name" />
+                                        <TreeTableColumn fx:id="customerAddressCol" maxWidth="1.7976931348623157E308" prefWidth="195.0" text="Address" />
+                                        <TreeTableColumn fx:id="customerPhoneCol" maxWidth="1.7976931348623157E308" prefWidth="168.0" text="Phone #" />
+                                        <TreeTableColumn fx:id="customerActiveCol" maxWidth="1.7976931348623157E308" prefWidth="75.0" text="Active" />
+                                        <TreeTableColumn fx:id="customerCreatedCol" maxWidth="1.7976931348623157E308" prefWidth="120.0" text="Created" />
+                                        <TreeTableColumn fx:id="customerUpdatedCol" maxWidth="1.7976931348623157E308" prefWidth="120.0" text="Updated" />
                                     </columns>
                                 </TreeTableView>
                             </children>
@@ -114,8 +123,18 @@
                                             </HBox.margin>
                                         </Label>
                                         <ComboBox fx:id="dateSegmentComboBox" prefWidth="150.0" />
-                                        <Pane prefHeight="36.0" prefWidth="286.0" />
-                                        <Hyperlink onMouseClicked="#handleNewAppointmentLink" prefHeight="27.0" text="New  Appointment" visited="true">
+                                        <Pane prefHeight="36.0" prefWidth="259.0" />
+                              <Hyperlink onMouseClicked="#handleDeleteAppointmentLink" prefHeight="27.0" text="Delete" visited="true">
+                                 <graphic>
+                                    <FontIcon iconLiteral="fa-trash" />
+                                 </graphic>
+                              </Hyperlink>
+                              <Hyperlink onMouseClicked="#handleEditAppointmentLink" prefHeight="27.0" text="Edit" visited="true">
+                                 <graphic>
+                                    <FontIcon iconLiteral="fa-pencil" />
+                                 </graphic>
+                              </Hyperlink>
+                                        <Hyperlink onMouseClicked="#handleNewAppointmentLink" prefHeight="27.0" text="New" visited="true">
                                             <graphic>
                                                 <FontIcon iconLiteral="fa-calendar-plus-o" />
                                             </graphic>
@@ -124,14 +143,13 @@
                                 </HBox>
                                 <TreeTableView layoutX="230.0" layoutY="56.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="36.0">
                                     <columns>
-                                        <TreeTableColumn maxWidth="75.0" prefWidth="75.0" text="ID" />
-                                        <TreeTableColumn maxWidth="115.0" prefWidth="115.0" text="Customer" />
-                                        <TreeTableColumn maxWidth="150.0" prefWidth="150.0" text="Details" />
-                                        <TreeTableColumn fx:id="appointmentsTable" maxWidth="120.0" prefWidth="120.0" text="Start" />
-                                        <TreeTableColumn maxWidth="120.0" prefWidth="120.0" text="End" />
-                                        <TreeTableColumn maxWidth="120.0" prefWidth="120.0" text="Created" />
-                                        <TreeTableColumn maxWidth="120.0" prefWidth="120.0" text="Updated" />
-                                        <TreeTableColumn maxWidth="100.0" prefWidth="100.0" text="Actions" />
+                                        <TreeTableColumn maxWidth="1.7976931348623157E308" prefWidth="75.0" text="ID" />
+                                        <TreeTableColumn maxWidth="1.7976931348623157E308" prefWidth="163.0" text="Customer" />
+                                        <TreeTableColumn maxWidth="1.7976931348623157E308" prefWidth="198.0" text="Details" />
+                                        <TreeTableColumn fx:id="appointmentsTable" maxWidth="1.7976931348623157E308" prefWidth="120.0" text="Start" />
+                                        <TreeTableColumn maxWidth="1.7976931348623157E308" prefWidth="120.0" text="End" />
+                                        <TreeTableColumn maxWidth="1.7976931348623157E308" prefWidth="120.0" text="Created" />
+                                        <TreeTableColumn maxWidth="1.7976931348623157E308" prefWidth="120.0" text="Updated" />
                                     </columns>
                                 </TreeTableView>
                             </children>
