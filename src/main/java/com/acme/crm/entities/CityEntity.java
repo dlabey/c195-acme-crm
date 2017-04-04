@@ -10,6 +10,8 @@ public class CityEntity {
     
     private int countryId;
     
+    private CountryEntity country;
+    
     private String createdBy;
     
     private Timestamp createDate;
@@ -46,6 +48,16 @@ public class CityEntity {
         this.countryId = countryId;
         
         return this.countryId;
+    }
+    
+    public CountryEntity getCountry() {
+        return this.country;
+    }
+    
+    public CountryEntity setCountry(CountryEntity country) {
+        this.country = country;
+        
+        return this.country;
     }
     
     public String getCreatedBy() {

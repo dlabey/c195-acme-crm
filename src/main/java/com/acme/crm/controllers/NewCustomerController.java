@@ -1,26 +1,15 @@
 package com.acme.crm.controllers;
 
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
-import javax.inject.Inject;
 
-import com.acme.crm.dao.AddressDAO;
-import com.acme.crm.services.ContextService;
 import org.apache.logging.log4j.LogManager;
 
 public class NewCustomerController extends CustomerController {
     
     private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(NewCustomerController.class);
-    
-    @Inject
-    ContextService contextService;
-    
-    @Inject
-    protected AddressDAO addressDAO;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -51,6 +40,8 @@ public class NewCustomerController extends CustomerController {
                         this.nameInput.getText(), addressId,
                         this.activeInput.isSelected(),
                         contextService.getUser().getUserName());
+                
+                this.contextService.getManageController().loadCustomers();
                 
                 logger.debug(customerId);
             } catch (Exception e) {

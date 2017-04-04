@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import com.acme.crm.entities.AddressEntity;
 import com.acme.crm.entities.CityEntity;
+import com.acme.crm.entities.CountryEntity;
 import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.services.DatabaseService;
 import java.sql.ResultSet;
@@ -38,8 +39,48 @@ public class CustomerDAOImpl implements CustomerDAO {
         ps.setString(5, createdBy);
         ps.setTimestamp(6, dateTime);
         ps.setString(7, createdBy);
+        ps.executeUpdate();
         
-        return ps.executeUpdate();
+        ResultSet generatedKeys = ps.getGeneratedKeys();
+        int newId = -1;
+        
+        if (generatedKeys.next()) {
+            newId = generatedKeys.getInt(1);
+        }
+        
+        return newId;
+    }
+    
+    @Override
+    public PreparedStatement updateCustomer(int customerId, String customerName,
+            boolean active, String updatedBy) throws SQLException {
+        PreparedStatement ps = this.dbService.getConnection()
+                .prepareStatement("UPDATE `customer` "
+                        + "SET `customerName`=?, "
+                        + "`active`=?, "
+                        + "`lastUpdate`=?, "
+                        + "`lastUpdateBy`=? "
+                        + "WHERE`customerId` = ?");
+        Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
+        
+        ps.setString(1, customerName);
+        ps.setBoolean(2, active);
+        ps.setTimestamp(3, dateTime);
+        ps.setString(4, updatedBy);
+        ps.setInt(5, customerId);
+        
+        return ps;
+    }
+    
+    @Override
+    public PreparedStatement deleteCustomer(int customerId) throws SQLException {
+        PreparedStatement ps = this.dbService.getConnection()
+                .prepareStatement("DELETE FROM `customer` "
+                        + "WHERE `customerId`=?");
+        
+        ps.setInt(1, customerId);
+        
+        return ps;
     }
     
     @Override
@@ -54,10 +95,18 @@ public class CustomerDAOImpl implements CustomerDAO {
         List<CustomerEntity> customers = new LinkedList<>();
         
         while (rs.next()) {
+            CountryEntity country = new CountryEntity();
+            country.setCountryId(rs.getInt("co.countryId"));
+            country.setCountry(rs.getString("co.country"));
+            country.setCreateDate(rs.getTimestamp("co.createDate"));
+            country.setCreatedBy(rs.getString("co.createdBy"));
+            country.setLastUpdate(rs.getTimestamp("co.lastUpdate"));
+            country.setLastUpdatedBy(rs.getString("co.lastUpdateBy"));
+            
             CityEntity city = new CityEntity();
             city.setCityId(rs.getInt("ci.cityId"));
             city.setCity(rs.getString("ci.city"));
-            city.setCountryId(rs.getInt("ci.countryId"));
+            city.setCountry(country);
             city.setCreatedBy(rs.getString("ci.createdBy"));
             city.setCreateDate(rs.getTimestamp("ci.createDate"));
             city.setLastUpdate(rs.getTimestamp("ci.lastUpdate"));

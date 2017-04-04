@@ -1,6 +1,8 @@
 package com.acme.crm.controllers;
 
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -12,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
@@ -22,19 +25,24 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import com.acme.crm.dao.AddressDAO;
 import com.acme.crm.dao.CustomerDAO;
 import com.acme.crm.entities.AddressEntity;
 import com.acme.crm.entities.CustomerEntity;
-import javafx.scene.Node;
+import com.acme.crm.services.ContextService;
+import com.acme.crm.services.DatabaseService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 public class ManageController extends MainController implements Initializable {
 
     private static final Logger logger = LogManager.getLogger(ManageController.class);
 
-    private Stage newCustomerStage;
+    @Inject
+    private ContextService contextService;
+    
+    @Inject
+    private DatabaseService dbService;
     
     @Inject
     private Provider<FXMLLoader> loader;
@@ -43,61 +51,74 @@ public class ManageController extends MainController implements Initializable {
     private Provider<NewCustomerController> newCustomerController;
     
     @Inject
-    protected CustomerDAO customerDAO;
+    private Provider<EditCustomerController> editCustomerController;
+    
+    @Inject
+    private CustomerDAO customerDAO;
+    
+    @Inject
+    private AddressDAO addressDAO;
     
     @FXML
-    protected TreeTableView customersTable;
+    private TreeTableView customersTable;
     
     @FXML
-    protected TreeTableColumn customerIdCol;
+    private TreeTableColumn customerIdCol;
     
     @FXML
-    protected TreeTableColumn customerNameCol;
+    private TreeTableColumn customerNameCol;
     
     @FXML
-    protected TreeTableColumn customerAddressCol;
+    private TreeTableColumn customerAddressCol;
     
     @FXML
-    protected TreeTableColumn customerPhoneCol;
+    private TreeTableColumn customerPhoneCol;
     
     @FXML
-    protected TreeTableColumn customerActiveCol;
+    private TreeTableColumn customerActiveCol;
     
     @FXML
-    protected TreeTableColumn customerCreatedCol;
+    private TreeTableColumn customerCreatedCol;
     
     @FXML
-    protected TreeTableColumn customerUpdatedCol;
+    private TreeTableColumn customerUpdatedCol;
     
     @FXML
-    protected TreeTableColumn customerEditCol;
+    private Hyperlink customerDeleteLink;
     
     @FXML
-    protected TreeTableColumn customerDeleteCol;
+    private Hyperlink customerEditLink;
+    
+    private CustomerEntity customerSelected;
+    
+    private Stage newCustomerStage;
+    
+    private Stage editCustomerStage;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         super.initialize(url, rb);
         
-        this.setUpCustomersTable();
-        this.loadCustomers();
+        this.contextService.setManageController(this);
         
-        // if there are no appointments display No appointments
+        this.setUpCustomersTable();
+        
         // if a customer is not selected disable New Appointment
     }
 
     @FXML
     private void handleCustomerDeselect(MouseEvent event) throws Exception {
-        // deselect customer in table
+        logger.debug("handleCustomerDeselect");
+        
+        this.customerSelected = null;
+        this.customerDeleteLink.setDisable(true);
+        this.customerEditLink.setDisable(true);
+        this.customersTable.getSelectionModel().clearSelection();
     }
 
     @FXML
     private void handleNewCustomerLink(MouseEvent event) throws Exception {
         logger.debug("handleNewCustomerLink");
-        // 1. open form to enter customer information
-        // 2. validate form
-        // 3. on success close form and reload data table
-        // 4. on error display error
        
         if (newCustomerStage == null) {
             FXMLLoader loader = this.loader.get();
@@ -115,12 +136,57 @@ public class ManageController extends MainController implements Initializable {
         
         newCustomerStage.show();
     }
+    
+    @FXML
+    private void handleDeleteCustomerLink(MouseEvent event) throws Exception {
+        logger.debug("handleDeleteCustomerLink");
+        
+        if (!this.customerDeleteLink.isDisabled() && this.getSelectedCustomer() != null) {
+            this.deleteCustomer();
+        }
+    }
+    
+    @FXML
+    private void handleEditCustomerLink(MouseEvent event) throws Exception {
+        logger.debug("handleEditCustomerLink");
+        
+        if (!this.customerEditLink.isDisabled() && this.getSelectedCustomer() != null) {
+            if (editCustomerStage != null) {
+                editCustomerStage.hide();
+                editCustomerStage = null;
+            }
+            
+            FXMLLoader loader = this.loader.get();
+
+            loader.setLocation(getClass().getResource("/ui/Customer.fxml"));
+            loader.setController(editCustomerController.get());
+
+            Parent root = loader.load();
+
+            editCustomerStage = new Stage();
+
+            editCustomerStage.setTitle("Edit Customer");
+            editCustomerStage.setScene(new Scene(root));
+        
+            editCustomerStage.show();
+        }
+    }
 
     @FXML
     private void handleNewAppointmentLink(MouseEvent event) throws Exception {
         System.out.println("handleNewAppointmentLinkClick");
         // 1. open form to enter appointment information for selected customer
         // 2. 
+    }
+    
+    @FXML
+    private void handleEditAppointmentLink(MouseEvent event) throws Exception {
+        
+    }
+    
+    @FXML
+    private void handleDeleteAppointmentLink(MouseEvent event) throws Exception {
+        
     }
     
     private void setUpCustomersTable() {
@@ -251,9 +317,24 @@ public class ManageController extends MainController implements Initializable {
                 }
             }
         });
+        
+        this.customersTable.getSelectionModel().selectedItemProperty()
+            .addListener((observableValue, oldSelection, newSelection) -> {
+                this.handleCustomerSelect((TreeItem<CustomerEntity>) newSelection);
+            });
+        
+        this.loadCustomers();
     }
     
-    private void loadCustomers() {
+    private void handleCustomerSelect(TreeItem<CustomerEntity> customerRow) {
+        if (customerRow != null) {
+            this.customerDeleteLink.setDisable(false);
+            this.customerEditLink.setDisable(false);
+            this.customerSelected = customerRow.getValue();
+        }
+    }
+    
+    public void loadCustomers() {
         logger.debug("loadCustomers");
         
         try {
@@ -263,21 +344,61 @@ public class ManageController extends MainController implements Initializable {
                         TreeItem<CustomerEntity> rootItem = new TreeItem<>(customer);
                         TreeItem<CustomerEntity> childItem = new TreeItem<>(customer);
                         
-                        rootItem.getChildren().add(childItem);
+                        rootItem.getChildren().setAll(childItem);
                         
                         return rootItem;
                     })
                     .collect(Collectors.toList());
            
-            
-            this.customersTable.getRoot().getChildren().addAll(
+            if (customerRows.size() > 0) {
+                this.customersTable.getRoot().getChildren().setAll(
                     FXCollections.observableList(customerRows));
-            
-            if (this.customersTable.getRoot().getChildren().size() == 0) {
+            } else {
                 this.customersTable.setPlaceholder(new Label("No customers"));
             }
         } catch (Exception e) {
             logger.debug(e.getMessage());
         }
+    }
+    
+    public CustomerEntity getSelectedCustomer() {
+        return this.customerSelected;
+    }
+    
+    public boolean deleteCustomer() {
+        boolean deleted = false;
+        
+        try {
+            try {
+                this.dbService.getConnection().setAutoCommit(false);
+
+                PreparedStatement customerPs = this.customerDAO.deleteCustomer(
+                    this.getSelectedCustomer().getCustomerId()
+                );
+                customerPs.executeUpdate();
+
+                PreparedStatement addressPs = this.addressDAO.deleteAddress(
+                    this.getSelectedCustomer().getAddress().getAddressId()
+                );
+                addressPs.executeUpdate();
+
+                this.dbService.getConnection().commit();
+
+                deleted = true;
+            } catch (Exception e) {
+                this.dbService.getConnection().rollback();
+
+                logger.debug(e.getMessage());
+            } finally {
+                this.dbService.getConnection().setAutoCommit(true);
+                this.loadCustomers();
+
+                logger.debug(deleted);
+            }
+        } catch (SQLException e) {
+            logger.debug(e.getMessage());
+        }
+        
+        return deleted;
     }
 }

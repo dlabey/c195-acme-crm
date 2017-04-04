@@ -16,11 +16,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 
+import com.acme.crm.dao.AddressDAO;
 import com.acme.crm.dao.CityDAO;
 import com.acme.crm.dao.CountryDAO;
 import com.acme.crm.dao.CustomerDAO;
 import com.acme.crm.entities.CityEntity;
 import com.acme.crm.entities.CountryEntity;
+import com.acme.crm.services.ContextService;
 import javafx.scene.Node;
 
 import org.apache.logging.log4j.LogManager;
@@ -31,6 +33,9 @@ public class CustomerController extends MainController implements Initializable 
     private static final Logger logger = LogManager.getLogger(CustomerController.class);
 
     @Inject
+    protected ContextService contextService;
+    
+    @Inject
     protected CityDAO cityDAO;
     
     @Inject
@@ -38,6 +43,9 @@ public class CustomerController extends MainController implements Initializable 
     
     @Inject
     protected CustomerDAO customerDAO;
+    
+    @Inject
+    protected AddressDAO addressDAO;
 
     @FXML
     protected Text headingText;
@@ -153,7 +161,7 @@ public class CustomerController extends MainController implements Initializable 
         }
     }
 
-    protected void handleSubmit(MouseEvent event, BooleanSupplier childHandler) throws Exception {
+    protected void handleSubmit(MouseEvent event, BooleanSupplier childHandler) {
         logger.debug("handleSubmit");
         
         if (this.nameInput.getText().isEmpty() ||
@@ -162,7 +170,7 @@ public class CustomerController extends MainController implements Initializable 
             this.postalCodeInput.getText().isEmpty() ||
             this.phoneInput.getText().isEmpty() ||
             this.countryInput.getText().isEmpty()) {
-            throw new Exception("Fields marked with * are required");
+            this.errorMessage.setText("Fields marked with * are required");
         } else {
             boolean result = childHandler.getAsBoolean();
             
