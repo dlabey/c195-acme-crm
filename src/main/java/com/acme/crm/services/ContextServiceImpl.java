@@ -1,8 +1,9 @@
 package com.acme.crm.services;
 
 import javax.inject.Singleton;
+import javafx.scene.control.TreeTableView;
 
-import com.acme.crm.controllers.ManageController;
+import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.entities.UserEntity;
 
 @Singleton
@@ -10,7 +11,9 @@ public class ContextServiceImpl implements ContextService {
     
     private UserEntity user;
     
-    private ManageController manageController;
+    private TreeTableView customersTable;
+    
+    private CustomerEntity customer;
     
     @Override
     public UserEntity getUser() {
@@ -25,14 +28,26 @@ public class ContextServiceImpl implements ContextService {
     }
     
     @Override
-    public ManageController getManageController() {
-        return this.manageController;
+    public TreeTableView getCustomersTable() {
+        return this.customersTable;
     }
     
     @Override
-    public ManageController setManageController(ManageController controller) {
-        this.manageController = controller;
+    public TreeTableView setCustomersTable(TreeTableView customersTable) {
+        this.customersTable = customersTable;
         
-        return this.manageController;
+        return this.customersTable;
+    }
+    
+    @Override
+    public CustomerEntity getSelectedCustomer() {
+        return this.customer;
+    }
+    
+    @Override
+    public CustomerEntity setSelectedCustomer(CustomerEntity customer) {
+        this.customer = customer;
+        
+        return this.customer;
     }
 }

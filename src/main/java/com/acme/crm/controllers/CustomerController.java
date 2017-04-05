@@ -13,6 +13,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 
@@ -23,7 +24,7 @@ import com.acme.crm.dao.CustomerDAO;
 import com.acme.crm.entities.CityEntity;
 import com.acme.crm.entities.CountryEntity;
 import com.acme.crm.services.ContextService;
-import javafx.scene.Node;
+import com.acme.crm.services.CustomerService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +35,9 @@ public class CustomerController extends MainController implements Initializable 
 
     @Inject
     protected ContextService contextService;
+    
+    @Inject
+    protected CustomerService customerService;
     
     @Inject
     protected CityDAO cityDAO;

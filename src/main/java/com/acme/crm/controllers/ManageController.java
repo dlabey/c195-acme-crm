@@ -1,8 +1,6 @@
 package com.acme.crm.controllers;
 
 import java.net.URL;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -25,12 +23,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import com.acme.crm.dao.AddressDAO;
-import com.acme.crm.dao.CustomerDAO;
 import com.acme.crm.entities.AddressEntity;
 import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.services.ContextService;
-import com.acme.crm.services.DatabaseService;
+import com.acme.crm.services.CustomerService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,7 +38,7 @@ public class ManageController extends MainController implements Initializable {
     private ContextService contextService;
     
     @Inject
-    private DatabaseService dbService;
+    protected CustomerService customerService;
     
     @Inject
     private Provider<FXMLLoader> loader;
@@ -52,12 +48,6 @@ public class ManageController extends MainController implements Initializable {
     
     @Inject
     private Provider<EditCustomerController> editCustomerController;
-    
-    @Inject
-    private CustomerDAO customerDAO;
-    
-    @Inject
-    private AddressDAO addressDAO;
     
     @FXML
     private TreeTableView customersTable;
@@ -99,9 +89,9 @@ public class ManageController extends MainController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         super.initialize(url, rb);
         
-        this.contextService.setManageController(this);
-        
         this.setUpCustomersTable();
+        
+        this.contextService.setCustomersTable(this.customersTable);
         
         // if a customer is not selected disable New Appointment
     }
@@ -141,7 +131,7 @@ public class ManageController extends MainController implements Initializable {
     private void handleDeleteCustomerLink(MouseEvent event) throws Exception {
         logger.debug("handleDeleteCustomerLink");
         
-        if (!this.customerDeleteLink.isDisabled() && this.getSelectedCustomer() != null) {
+        if (!this.customerDeleteLink.isDisabled() && this.customerSelected != null) {
             this.deleteCustomer();
         }
     }
@@ -150,7 +140,7 @@ public class ManageController extends MainController implements Initializable {
     private void handleEditCustomerLink(MouseEvent event) throws Exception {
         logger.debug("handleEditCustomerLink");
         
-        if (!this.customerEditLink.isDisabled() && this.getSelectedCustomer() != null) {
+        if (!this.customerEditLink.isDisabled() && this.customerSelected != null) {
             if (editCustomerStage != null) {
                 editCustomerStage.hide();
                 editCustomerStage = null;
@@ -323,7 +313,11 @@ public class ManageController extends MainController implements Initializable {
                 this.handleCustomerSelect((TreeItem<CustomerEntity>) newSelection);
             });
         
-        this.loadCustomers();
+        try {
+            this.customerService.loadCustomers(this.customersTable);
+        } catch (Exception e) {
+            logger.debug(e.getMessage());
+        }
     }
     
     private void handleCustomerSelect(TreeItem<CustomerEntity> customerRow) {
@@ -331,71 +325,21 @@ public class ManageController extends MainController implements Initializable {
             this.customerDeleteLink.setDisable(false);
             this.customerEditLink.setDisable(false);
             this.customerSelected = customerRow.getValue();
+            
+            this.contextService.setSelectedCustomer(customerSelected);
         }
-    }
-    
-    public void loadCustomers() {
-        logger.debug("loadCustomers");
-        
-        try {
-            List<CustomerEntity> customers = this.customerDAO.getCustomers();
-            List<TreeItem<CustomerEntity>> customerRows = customers.stream()
-                    .map(customer -> {
-                        TreeItem<CustomerEntity> rootItem = new TreeItem<>(customer);
-                        TreeItem<CustomerEntity> childItem = new TreeItem<>(customer);
-                        
-                        rootItem.getChildren().setAll(childItem);
-                        
-                        return rootItem;
-                    })
-                    .collect(Collectors.toList());
-           
-            if (customerRows.size() > 0) {
-                this.customersTable.getRoot().getChildren().setAll(
-                    FXCollections.observableList(customerRows));
-            } else {
-                this.customersTable.setPlaceholder(new Label("No customers"));
-            }
-        } catch (Exception e) {
-            logger.debug(e.getMessage());
-        }
-    }
-    
-    public CustomerEntity getSelectedCustomer() {
-        return this.customerSelected;
     }
     
     public boolean deleteCustomer() {
         boolean deleted = false;
         
         try {
-            try {
-                this.dbService.getConnection().setAutoCommit(false);
-
-                PreparedStatement customerPs = this.customerDAO.deleteCustomer(
-                    this.getSelectedCustomer().getCustomerId()
-                );
-                customerPs.executeUpdate();
-
-                PreparedStatement addressPs = this.addressDAO.deleteAddress(
-                    this.getSelectedCustomer().getAddress().getAddressId()
-                );
-                addressPs.executeUpdate();
-
-                this.dbService.getConnection().commit();
-
-                deleted = true;
-            } catch (Exception e) {
-                this.dbService.getConnection().rollback();
-
-                logger.debug(e.getMessage());
-            } finally {
-                this.dbService.getConnection().setAutoCommit(true);
-                this.loadCustomers();
-
-                logger.debug(deleted);
-            }
-        } catch (SQLException e) {
+            deleted = this.customerService.deleteCustomer(
+                            this.customerSelected.getCustomerId(),
+                            this.customerSelected.getAddress().getAddressId());
+            
+            this.customerService.loadCustomers(this.customersTable);
+        } catch (Exception e) {
             logger.debug(e.getMessage());
         }
         

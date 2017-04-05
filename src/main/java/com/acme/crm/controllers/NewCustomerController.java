@@ -28,20 +28,17 @@ public class NewCustomerController extends CustomerController {
             int customerId = 0;
             
             try {
-                int addressId = this.addressDAO.createAddress(
-                        this.addressInput.getText(),
+                customerId = this.customerService.createCustomer(
+                        this.nameInput.getText(), this.addressInput.getText(),
                         this.address2Input.getText(),
                         this.cityInput.getValue().getCityId(),
                         this.postalCodeInput.getText(),
-                        this.phoneInput.getText(),
-                        this.contextService.getUser().getUserName());
-                
-                customerId = this.customerDAO.createCustomer(
-                        this.nameInput.getText(), addressId,
-                        this.activeInput.isSelected(),
+                        this.phoneInput.getText(), this.activeInput.isSelected(),
                         contextService.getUser().getUserName());
                 
-                this.contextService.getManageController().loadCustomers();
+                this.customerService.loadCustomers(
+                    this.contextService.getCustomersTable()
+                );
                 
                 logger.debug(customerId);
             } catch (Exception e) {

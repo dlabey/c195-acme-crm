@@ -1,6 +1,8 @@
 package com.acme.crm.services;
 
-import com.acme.crm.controllers.ManageController;
+import javafx.scene.control.TreeTableView;
+
+import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.entities.UserEntity;
 
 public interface ContextService {
@@ -9,7 +11,11 @@ public interface ContextService {
     
     public UserEntity setUser(UserEntity user);
     
-    public ManageController getManageController();
+    public TreeTableView getCustomersTable();
     
-    public ManageController setManageController(ManageController controller);
+    public TreeTableView setCustomersTable(TreeTableView customersTable);
+    
+    public CustomerEntity getSelectedCustomer();
+    
+    public CustomerEntity setSelectedCustomer(CustomerEntity customer);
 }
