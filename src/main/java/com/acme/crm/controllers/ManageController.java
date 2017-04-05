@@ -231,7 +231,7 @@ public class ManageController extends MainController implements Initializable {
                 if (depth == 2) {
                     address = String.format("%s, %s, %s",
                         addressEntity.getCity().getCity(),
-                        addressEntity.getCity().getCountryId(),
+                        addressEntity.getCity().getCountry().getCountry(),
                         addressEntity.getPostalCode());
                 } else {
                     address = String.format("%s %s",

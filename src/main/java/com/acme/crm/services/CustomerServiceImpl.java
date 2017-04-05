@@ -128,6 +128,7 @@ public class CustomerServiceImpl implements CustomerService {
                 customersTable.getRoot().getChildren().setAll(
                     FXCollections.observableList(customerRows));
             } else {
+                customersTable.getRoot().getChildren().clear();
                 customersTable.setPlaceholder(new Label("No customers"));
             }
     }

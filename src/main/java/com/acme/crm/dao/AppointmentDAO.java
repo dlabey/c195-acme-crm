@@ -1,14 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.acme.crm.dao;
 
-/**
- *
- * @author darren
- */
-public class AppointmentDAO {
+import java.time.LocalDateTime;
+
+public interface AppointmentDAO {
     
+    public int createAppointment(int customerId, String title,
+            String description, String location, String contact, String url,
+            LocalDateTime start, LocalDateTime end, String createdBy)
+            throws Exception;
 }

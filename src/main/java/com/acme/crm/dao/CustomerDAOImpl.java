@@ -25,8 +25,8 @@ public class CustomerDAOImpl implements CustomerDAO {
     public int createCustomer(String customerName, int addressId,boolean active,
             String createdBy) throws SQLException {
         PreparedStatement ps = this.dbService.getConnection()
-                .prepareStatement("INSERT INTO `customer`"
-                        + "(customerName, addressId, active, createDate,"
+                .prepareStatement("INSERT INTO `customer` "
+                        + "(customerName, addressId, active, createDate, "
                         + "createdBy, lastUpdate, lastUpdateBy) "
                         + "VALUES(?, ?, ?, ?, ?, ?, ?)",
                         Statement.RETURN_GENERATED_KEYS);
