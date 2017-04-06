@@ -1,19 +1,15 @@
 package com.acme.crm.controllers;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.TreeTableColumn;
@@ -24,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import com.acme.crm.entities.AddressEntity;
+import com.acme.crm.entities.AppointmentEntity;
 import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.services.ContextService;
 import com.acme.crm.services.CustomerService;
@@ -48,6 +45,9 @@ public class ManageController extends MainController implements Initializable {
     
     @Inject
     private Provider<EditCustomerController> editCustomerController;
+    
+    @Inject
+    private Provider<NewAppointmentController> newAppointmentController;
     
     @FXML
     private TreeTableView customersTable;
@@ -79,11 +79,47 @@ public class ManageController extends MainController implements Initializable {
     @FXML
     private Hyperlink customerEditLink;
     
+    @FXML
+    private TreeTableView appointmentsTable;
+    
+    @FXML
+    private TreeTableColumn appointmentIdCol;
+    
+    @FXML
+    private TreeTableColumn appointmentCustomerCol;
+    
+    @FXML
+    private TreeTableColumn appointmentDetailsCol;
+    
+    @FXML
+    private TreeTableColumn appointmentStartCol;
+    
+    @FXML
+    private TreeTableColumn appointmentEndCol;
+    
+    @FXML
+    private TreeTableColumn appointmentCreatedCol;
+    
+    @FXML
+    private TreeTableColumn appointmentUpdateCol;
+    
+    @FXML
+    private Hyperlink appointmentDeleteLink;
+    
+    @FXML
+    private Hyperlink appointmentEditLink;
+    
     private CustomerEntity customerSelected;
+    
+    private AppointmentEntity appointmentSelect;
     
     private Stage newCustomerStage;
     
     private Stage editCustomerStage;
+    
+    private Stage newAppointmentStage;
+    
+    private Stage editAppointmentStage;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -164,14 +200,49 @@ public class ManageController extends MainController implements Initializable {
 
     @FXML
     private void handleNewAppointmentLink(MouseEvent event) throws Exception {
-        System.out.println("handleNewAppointmentLinkClick");
-        // 1. open form to enter appointment information for selected customer
-        // 2. 
+        logger.debug("handleNewAppointmentLink");
+       
+        if (newAppointmentStage == null) {
+            FXMLLoader loader = this.loader.get();
+        
+            loader.setLocation(getClass().getResource("/ui/Appointment.fxml"));
+            loader.setController(newAppointmentController.get());
+
+            Parent root = loader.load();
+            
+            newAppointmentStage = new Stage();
+
+            newAppointmentStage.setTitle("New Appointment");
+            newAppointmentStage.setScene(new Scene(root));
+        }
+        
+        newAppointmentStage.show();
     }
     
     @FXML
     private void handleEditAppointmentLink(MouseEvent event) throws Exception {
+        logger.debug("handleEditAppointmentLink");
         
+        if (!this.appointmentEditLink.isDisabled() && this.customerSelected != null) {
+            if (editAppointmentStage != null) {
+                editAppointmentStage.hide();
+                editAppointmentStage = null;
+            }
+            
+            FXMLLoader loader = this.loader.get();
+
+            loader.setLocation(getClass().getResource("/ui/Appointment.fxml"));
+            //loader.setController(editCustomerController.get());
+
+            Parent root = loader.load();
+
+            editAppointmentStage = new Stage();
+
+            editAppointmentStage.setTitle("Edit Appointment");
+            editAppointmentStage.setScene(new Scene(root));
+        
+            editAppointmentStage.show();
+        } 
     }
     
     @FXML

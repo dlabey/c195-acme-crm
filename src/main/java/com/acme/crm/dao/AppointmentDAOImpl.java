@@ -24,7 +24,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
                 .prepareStatement("INSERT INTO `appointment` "
                         + "(customerId, title, description, location, contact, "
                         + "url, start, end, createDate, createdBy, lastUpdate, "
-                        + "lastUpdatedBy)"
+                        + "lastUpdateBy)"
                         + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         Statement.RETURN_GENERATED_KEYS);
         Timestamp start = Timestamp.valueOf(startRaw);
@@ -44,6 +44,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         ps.setString(10, createdBy);
         ps.setTimestamp(11, dateTime);
         ps.setString(12, createdBy);
+        ps.executeUpdate();
         
         ResultSet generatedKeys = ps.getGeneratedKeys();
         int newId = -1;

@@ -99,4 +99,16 @@ public class CustomerEntity {
         
         return this.lastUpdatedBy;
     }
+    
+    @Override
+    public int hashCode() {
+        return this.customerId;
+    }
+    
+    @Override
+    public boolean equals(Object object) {
+        CustomerEntity customer = (CustomerEntity) object;
+        
+        return customer == null ? false : this.customerId == customer.customerId;
+    }
 }

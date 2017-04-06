@@ -34,7 +34,7 @@ public class NewCustomerController extends CustomerController {
                         this.cityInput.getValue().getCityId(),
                         this.postalCodeInput.getText(),
                         this.phoneInput.getText(), this.activeInput.isSelected(),
-                        contextService.getUser().getUserName());
+                        this.contextService.getUser().getUserName());
                 
                 this.customerService.loadCustomers(
                     this.contextService.getCustomersTable()

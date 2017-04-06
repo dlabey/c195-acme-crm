@@ -13,6 +13,8 @@ import com.acme.crm.services.ContextService;
 import com.acme.crm.services.ContextServiceImpl;
 import com.acme.crm.dao.AddressDAO;
 import com.acme.crm.dao.AddressDAOImpl;
+import com.acme.crm.dao.AppointmentDAO;
+import com.acme.crm.dao.AppointmentDAOImpl;
 import com.acme.crm.dao.CityDAO;
 import com.acme.crm.dao.CityDAOImpl;
 import com.acme.crm.dao.CountryDAO;
@@ -51,6 +53,7 @@ class GuiceModule extends AbstractModule {
         bind(ContextService.class).to(ContextServiceImpl.class);
         
         bind(AddressDAO.class).to(AddressDAOImpl.class);
+        bind(AppointmentDAO.class).to(AppointmentDAOImpl.class);
         bind(CityDAO.class).to(CityDAOImpl.class);
         bind(CountryDAO.class).to(CountryDAOImpl.class);
         bind(CustomerDAO.class).to(CustomerDAOImpl.class);
