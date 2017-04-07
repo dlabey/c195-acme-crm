@@ -1,6 +1,7 @@
 package com.acme.crm.controllers;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
@@ -41,7 +42,7 @@ public class NewCustomerController extends CustomerController {
                 );
                 
                 logger.debug(customerId);
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 errorMessage.setText("Application error");
 
                 logger.debug(e.getMessage());

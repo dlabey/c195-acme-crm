@@ -5,6 +5,8 @@ import javax.inject.Inject;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import com.acme.crm.services.AppointmentService;
+import com.acme.crm.services.AppointmentServiceImpl;
 import com.acme.crm.services.CustomerService;
 import com.acme.crm.services.CustomerServiceImpl;
 import com.acme.crm.services.DatabaseService;
@@ -48,6 +50,7 @@ public class Main extends Application {
 class GuiceModule extends AbstractModule {
     @Override
     protected void configure() {
+        bind(AppointmentService.class).to(AppointmentServiceImpl.class);
         bind(CustomerService.class).to(CustomerServiceImpl.class);
         bind(DatabaseService.class).to(DatabaseServiceImpl.class);
         bind(ContextService.class).to(ContextServiceImpl.class);

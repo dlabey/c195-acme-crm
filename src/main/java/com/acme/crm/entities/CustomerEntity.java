@@ -8,6 +8,8 @@ public class CustomerEntity {
     
     private String customerName;
     
+    private int addressId;
+    
     private AddressEntity address;
     
     private boolean active;
@@ -38,6 +40,16 @@ public class CustomerEntity {
         this.customerName = customerName;
         
         return this.customerName;
+    }
+    
+    public int getAddressId() {
+        return this.addressId;
+    }
+    
+    public int setAddressId(int addressId) {
+        this.addressId = addressId;
+        
+        return this.addressId;
     }
     
     public AddressEntity getAddress() {

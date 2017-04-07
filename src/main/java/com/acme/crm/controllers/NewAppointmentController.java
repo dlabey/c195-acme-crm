@@ -1,6 +1,7 @@
 package com.acme.crm.controllers;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
 import javafx.fxml.FXML;
@@ -44,10 +45,12 @@ public class NewAppointmentController extends AppointmentController {
                         this.endInput.getDateTimeValue(),
                         this.contextService.getUser().getUserName());
                 
-                // todo load table
+                this.appointmentService.loadAppointments(
+                    this.contextService.getAppointmentsTable()
+                );
                 
                 logger.debug(appointmentId);
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 errorMessage.setText("Application error");
 
                 logger.debug(e.getMessage());

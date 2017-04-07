@@ -8,6 +8,8 @@ public class AppointmentEntity {
     
     private int customerId;
     
+    private CustomerEntity customer;
+    
     private String title;
     
     private String description;
@@ -48,6 +50,16 @@ public class AppointmentEntity {
         this.customerId = customerId;
         
         return this.customerId;
+    }
+    
+    public CustomerEntity getCustomer() {
+        return this.customer;
+    }
+    
+    public CustomerEntity setCustomer(CustomerEntity customer) {
+        this.customer = customer;
+        
+        return this.customer;
     }
     
     public String getTitle() {

@@ -1,6 +1,6 @@
 package com.acme.crm.controllers;
 
-import com.acme.crm.dao.CustomerDAO;
+
 import java.net.URL;
 import java.util.List;
 import java.util.function.BooleanSupplier;
@@ -16,9 +16,11 @@ import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 
+import com.acme.crm.dao.AppointmentDAO;
+import com.acme.crm.dao.CustomerDAO;
 import com.acme.crm.entities.CustomerEntity;
+import com.acme.crm.services.AppointmentService;
 import com.acme.crm.services.ContextService;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tornadofx.control.DateTimePicker;
@@ -29,6 +31,12 @@ public class AppointmentController extends MainController implements Initializab
 
     @Inject
     protected ContextService contextService;
+    
+    @Inject
+    protected AppointmentService appointmentService;
+    
+    @Inject
+    protected AppointmentDAO appointmentDAO;
     
     @Inject
     protected CustomerDAO customerDAO;

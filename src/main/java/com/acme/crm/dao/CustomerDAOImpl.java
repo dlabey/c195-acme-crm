@@ -56,10 +56,10 @@ public class CustomerDAOImpl implements CustomerDAO {
             boolean active, String updatedBy) throws SQLException {
         PreparedStatement ps = this.dbService.getConnection()
                 .prepareStatement("UPDATE `customer` "
-                        + "SET `customerName`=?, "
-                        + "`active`=?, "
-                        + "`lastUpdate`=?, "
-                        + "`lastUpdateBy`=? "
+                        + "SET `customerName` = ?, "
+                        + "`active` = ?, "
+                        + "`lastUpdate` = ?, "
+                        + "`lastUpdateBy` = ? "
                         + "WHERE`customerId` = ?");
         Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
         
@@ -76,7 +76,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     public PreparedStatement deleteCustomer(int customerId) throws SQLException {
         PreparedStatement ps = this.dbService.getConnection()
                 .prepareStatement("DELETE FROM `customer` "
-                        + "WHERE `customerId`=?");
+                        + "WHERE `customerId` = ?");
         
         ps.setInt(1, customerId);
         

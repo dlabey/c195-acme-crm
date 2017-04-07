@@ -1,6 +1,7 @@
 package com.acme.crm.controllers;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -19,11 +20,14 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import com.acme.crm.dao.AppointmentDAO;
 import com.acme.crm.entities.AddressEntity;
 import com.acme.crm.entities.AppointmentEntity;
 import com.acme.crm.entities.CustomerEntity;
+import com.acme.crm.services.AppointmentService;
 import com.acme.crm.services.ContextService;
 import com.acme.crm.services.CustomerService;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,6 +42,12 @@ public class ManageController extends MainController implements Initializable {
     protected CustomerService customerService;
     
     @Inject
+    protected AppointmentService appointmentService;
+    
+    @Inject
+    protected AppointmentDAO appointmentDAO;
+    
+    @Inject
     private Provider<FXMLLoader> loader;
     
     @Inject
@@ -48,6 +58,9 @@ public class ManageController extends MainController implements Initializable {
     
     @Inject
     private Provider<NewAppointmentController> newAppointmentController;
+    
+    @Inject
+    private Provider<EditAppointmentController> editAppointmentController;
     
     @FXML
     private TreeTableView customersTable;
@@ -101,7 +114,7 @@ public class ManageController extends MainController implements Initializable {
     private TreeTableColumn appointmentCreatedCol;
     
     @FXML
-    private TreeTableColumn appointmentUpdateCol;
+    private TreeTableColumn appointmentUpdatedCol;
     
     @FXML
     private Hyperlink appointmentDeleteLink;
@@ -111,7 +124,7 @@ public class ManageController extends MainController implements Initializable {
     
     private CustomerEntity customerSelected;
     
-    private AppointmentEntity appointmentSelect;
+    private AppointmentEntity appointmentSelected;
     
     private Stage newCustomerStage;
     
@@ -126,10 +139,10 @@ public class ManageController extends MainController implements Initializable {
         super.initialize(url, rb);
         
         this.setUpCustomersTable();
+        this.setUpAppointmentsTable();
         
         this.contextService.setCustomersTable(this.customersTable);
-        
-        // if a customer is not selected disable New Appointment
+        this.contextService.setAppointmentsTable(this.appointmentsTable);
     }
 
     @FXML
@@ -223,7 +236,8 @@ public class ManageController extends MainController implements Initializable {
     private void handleEditAppointmentLink(MouseEvent event) throws Exception {
         logger.debug("handleEditAppointmentLink");
         
-        if (!this.appointmentEditLink.isDisabled() && this.customerSelected != null) {
+        if (!this.appointmentEditLink.isDisabled() &&
+                this.appointmentSelected != null) {
             if (editAppointmentStage != null) {
                 editAppointmentStage.hide();
                 editAppointmentStage = null;
@@ -232,7 +246,7 @@ public class ManageController extends MainController implements Initializable {
             FXMLLoader loader = this.loader.get();
 
             loader.setLocation(getClass().getResource("/ui/Appointment.fxml"));
-            //loader.setController(editCustomerController.get());
+            loader.setController(editAppointmentController.get());
 
             Parent root = loader.load();
 
@@ -247,7 +261,12 @@ public class ManageController extends MainController implements Initializable {
     
     @FXML
     private void handleDeleteAppointmentLink(MouseEvent event) throws Exception {
+        logger.debug("handleDeleteAppointmentLink");
         
+        if (!this.appointmentDeleteLink.isDisabled() &&
+                this.appointmentSelected != null) {
+            this.deleteAppointment();
+        }
     }
     
     private void setUpCustomersTable() {
@@ -410,7 +429,183 @@ public class ManageController extends MainController implements Initializable {
                             this.customerSelected.getAddress().getAddressId());
             
             this.customerService.loadCustomers(this.customersTable);
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            logger.debug(e.getMessage());
+        }
+        
+        return deleted;
+    }
+    
+    private void setUpAppointmentsTable() {
+        TreeItem<Void> root = new TreeItem<>();
+        
+        root.setExpanded(true);
+        
+        this.appointmentsTable.setRoot(root);
+        this.appointmentsTable.setShowRoot(false);
+        
+        this.appointmentIdCol.setCellValueFactory(
+            new Callback<TreeTableColumn.CellDataFeatures<AppointmentEntity, Integer>,
+                ObservableValue<Integer>>() {
+            public ObservableValue<Integer> call(
+                    TreeTableColumn.CellDataFeatures<AppointmentEntity, Integer> a) {
+                int depth = a.getTreeTableView().getTreeItemLevel(a.getValue());
+                
+                if (depth == 1) {
+                    return new ReadOnlyObjectWrapper(a.getValue().getValue()
+                        .getAppointmentId());
+                } else {
+                    return null;
+                }
+            }
+        });
+        
+        this.appointmentCustomerCol.setCellValueFactory(
+            new Callback<TreeTableColumn.CellDataFeatures<AppointmentEntity, String>,
+                ObservableValue<String>>() {
+            public ObservableValue<String> call(
+                    TreeTableColumn.CellDataFeatures<AppointmentEntity, String> a) {
+                int depth = a.getTreeTableView().getTreeItemLevel(a.getValue());
+                CustomerEntity customerEntity = a.getValue().getValue().getCustomer();
+                String customer = null; 
+                
+                if (depth == 1) {
+                    customer = String.format("%s (%s)",
+                        customerEntity.getCustomerName(),
+                        customerEntity.getCustomerId());
+                }
+                
+                return new ReadOnlyObjectWrapper(customer);
+            }
+        });
+        
+        this.appointmentDetailsCol.setCellValueFactory(
+            new Callback<TreeTableColumn.CellDataFeatures<AppointmentEntity, String>,
+                ObservableValue<String>>() {
+            public ObservableValue<String> call(
+                    TreeTableColumn.CellDataFeatures<AppointmentEntity, String> a) {
+                int depth = a.getTreeTableView().getTreeItemLevel(a.getValue());
+                AppointmentEntity appointmentEntity = a.getValue().getValue();
+                String details;
+                
+                if (depth == 2) {
+                    details = String.format("%s: %s%n%s: %s%n%s: %s %s: %s%n%s: %s",
+                        "Description",
+                        appointmentEntity.getDescription(),
+                        "Consultant",
+                        appointmentEntity.getCreatedBy(),
+                        "Location",
+                        appointmentEntity.getLocation(),
+                        "Contact",
+                        appointmentEntity.getContact(),
+                        "URL",
+                        appointmentEntity.getUrl());
+                } else {
+                    details = appointmentEntity.getTitle();
+                    
+                }
+                
+                return new ReadOnlyObjectWrapper(details);
+            }
+        });
+        
+        this.appointmentStartCol.setCellValueFactory(
+            new Callback<TreeTableColumn.CellDataFeatures<AppointmentEntity, String>,
+                ObservableValue<String>>() {
+            public ObservableValue<String> call(
+                    TreeTableColumn.CellDataFeatures<AppointmentEntity, String> a) {
+                int depth = a.getTreeTableView().getTreeItemLevel(a.getValue());
+                
+                if (depth == 1) {
+                    return new ReadOnlyObjectWrapper(a.getValue().getValue()
+                        .getStart());
+                }
+                
+                return null;
+            }
+        });
+        
+        this.appointmentEndCol.setCellValueFactory(
+            new Callback<TreeTableColumn.CellDataFeatures<AppointmentEntity, String>,
+                ObservableValue<String>>() {
+            public ObservableValue<String> call(
+                    TreeTableColumn.CellDataFeatures<AppointmentEntity, String> a) {
+                int depth = a.getTreeTableView().getTreeItemLevel(a.getValue());
+                
+                if (depth == 1) {
+                    return new ReadOnlyObjectWrapper(a.getValue().getValue()
+                        .getEnd());
+                }
+                
+                return null;
+            }
+        });
+        
+        this.appointmentCreatedCol.setCellValueFactory(
+            new Callback<TreeTableColumn.CellDataFeatures<AppointmentEntity, String>,
+                ObservableValue<String>>() {
+            public ObservableValue<String> call(
+                    TreeTableColumn.CellDataFeatures<AppointmentEntity, String> a) {
+                int depth = a.getTreeTableView().getTreeItemLevel(a.getValue());
+                
+                if (depth == 1) {
+                    return new ReadOnlyObjectWrapper(a.getValue().getValue()
+                        .getCreateDate());
+                }
+                
+                return null;
+            }
+        });
+        
+        this.appointmentUpdatedCol.setCellValueFactory(
+            new Callback<TreeTableColumn.CellDataFeatures<AppointmentEntity, String>,
+                ObservableValue<String>>() {
+            public ObservableValue<String> call(
+                    TreeTableColumn.CellDataFeatures<AppointmentEntity, String> a) {
+                int depth = a.getTreeTableView().getTreeItemLevel(a.getValue());
+                
+                if (depth == 1) {
+                    return new ReadOnlyObjectWrapper(a.getValue().getValue()
+                        .getLastUpdate());
+                }
+                
+                return null;
+            }
+        });
+        
+        this.appointmentsTable.getSelectionModel().selectedItemProperty()
+            .addListener((observableValue, oldSelection, newSelection) -> {
+                this.handleAppointmentSelect((TreeItem<AppointmentEntity>) newSelection);
+            });
+        
+        try {
+            this.appointmentService.loadAppointments(this.appointmentsTable);
+        } catch (SQLException e) {
+            logger.debug(e.getMessage());
+        }
+    }
+    
+    private void handleAppointmentSelect(TreeItem<AppointmentEntity>
+            appointmentRow) {
+        if (appointmentRow != null) {
+            this.appointmentDeleteLink.setDisable(false);
+            this.appointmentEditLink.setDisable(false);
+            this.appointmentSelected = appointmentRow.getValue();
+            
+            this.contextService.setSelectedAppointment(appointmentSelected);
+        }
+    }
+    
+    public boolean deleteAppointment() {
+        boolean deleted = false;
+        
+        try {
+            this.appointmentDAO.deleteAppointment(
+                this.appointmentSelected.getAppointmentId()
+            );
+            
+            this.appointmentService.loadAppointments(this.appointmentsTable);
+        } catch (SQLException e) {
             logger.debug(e.getMessage());
         }
         

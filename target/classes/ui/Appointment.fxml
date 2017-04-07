@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import tornadofx.control.*?>
 <?import org.kordamp.ikonli.javafx.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
@@ -9,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="370.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="410.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <HBox prefHeight="29.0" prefWidth="600.0">
             <children>
@@ -46,6 +47,14 @@
         </HBox>
         <VBox layoutX="50.0" layoutY="40.0" prefHeight="544.0" prefWidth="300.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
             <children>
+            <Text fx:id="headingText" strokeType="OUTSIDE" strokeWidth="0.0" text="Appointment">
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Text>
             <HBox>
                <children>
                   <Label contentDisplay="RIGHT" onMouseClicked="#handleCustomerLabelClick" prefWidth="300.0" text="Customer">
@@ -62,12 +71,12 @@
             </HBox>
             <HBox>
                <children>
-                  <TextField fx:id="addressInput" editable="false" prefWidth="300.0">
+                  <ComboBox fx:id="customerInput" prefWidth="300.0">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
-                  </TextField>
-                  <TextField fx:id="address2Input" prefWidth="300.0">
+                  </ComboBox>
+                  <TextField fx:id="titleInput" prefWidth="300.0">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
@@ -77,17 +86,11 @@
             <HBox>
                <children>
                   <Label contentDisplay="RIGHT" onMouseClicked="#handleDescriptionLabelClick" prefWidth="300.0" text="Description">
-                     <graphic>
-                        <FontIcon iconLiteral="fa-asterisk" />
-                     </graphic>
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
                   </Label>
                   <Label contentDisplay="RIGHT" onMouseClicked="#handleLocationLabelClick" prefWidth="300.0" text="Location">
-                     <graphic>
-                        <FontIcon iconLiteral="fa-asterisk" />
-                     </graphic>
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
@@ -96,12 +99,12 @@
             </HBox>
             <HBox>
                <children>
-                  <TextField fx:id="addressInput1" prefWidth="300.0">
+                  <TextField fx:id="descriptionInput" prefWidth="300.0">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
                   </TextField>
-                  <TextField fx:id="address2Input1" prefWidth="300.0">
+                  <TextField fx:id="locationInput" prefWidth="300.0">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
@@ -111,17 +114,11 @@
             <HBox>
                <children>
                   <Label contentDisplay="RIGHT" onMouseClicked="#handleContactLabelClick" prefWidth="300.0" text="Contact">
-                     <graphic>
-                        <FontIcon iconLiteral="fa-asterisk" />
-                     </graphic>
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
                   </Label>
                   <Label contentDisplay="RIGHT" onMouseClicked="#handleUrlLabelClick" prefWidth="300.0" text="URL">
-                     <graphic>
-                        <FontIcon iconLiteral="fa-asterisk" />
-                     </graphic>
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
@@ -130,12 +127,12 @@
             </HBox>
             <HBox>
                <children>
-                  <TextField fx:id="addressInput11" prefWidth="300.0">
+                  <TextField fx:id="contactInput" prefWidth="300.0">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
                   </TextField>
-                  <TextField fx:id="address2Input11" prefWidth="300.0">
+                  <TextField fx:id="urlInput" prefWidth="300.0">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
@@ -146,34 +143,40 @@
                <children>
                   <Label contentDisplay="RIGHT" onMouseClicked="#handleStartLabelClick" prefWidth="300.0" text="Start">
                      <graphic>
-                        <FontIcon iconLiteral="fa-asterisk" />
+                        <FontIcon iconLiteral="fa-info-circle" />
                      </graphic>
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
+                     <tooltip>
+                        <Tooltip text="Time is 24 hour based" />
+                     </tooltip>
                   </Label>
                   <Label contentDisplay="RIGHT" onMouseClicked="#handleEndLabelClick" prefWidth="300.0" text="End">
                      <graphic>
-                        <FontIcon iconLiteral="fa-asterisk" />
+                        <FontIcon iconLiteral="fa-info-circle" />
                      </graphic>
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
+                     <tooltip>
+                        <Tooltip text="Time is 24 hour based" />
+                     </tooltip>
                   </Label>
                </children>
             </HBox>
             <HBox>
                <children>
-                  <TextField fx:id="addressInput111" prefWidth="300.0">
+                  <DateTimePicker fx:id="startInput" prefWidth="300.0">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
-                  </TextField>
-                  <TextField fx:id="address2Input111" prefWidth="300.0">
+                  </DateTimePicker>
+                  <DateTimePicker fx:id="endInput" prefWidth="300.0">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
-                  </TextField>
+                  </DateTimePicker>
                </children>
             </HBox>
             <Button mnemonicParsing="false" onMouseClicked="#handleSubmit" text="Submit" />

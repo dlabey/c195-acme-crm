@@ -3,6 +3,7 @@ package com.acme.crm.services;
 import javax.inject.Singleton;
 import javafx.scene.control.TreeTableView;
 
+import com.acme.crm.entities.AppointmentEntity;
 import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.entities.UserEntity;
 
@@ -13,7 +14,11 @@ public class ContextServiceImpl implements ContextService {
     
     private TreeTableView customersTable;
     
+    private TreeTableView appointmentsTable;
+    
     private CustomerEntity customer;
+    
+    private AppointmentEntity appointment;
     
     @Override
     public UserEntity getUser() {
@@ -40,6 +45,18 @@ public class ContextServiceImpl implements ContextService {
     }
     
     @Override
+    public TreeTableView getAppointmentsTable() {
+        return this.appointmentsTable;
+    }
+    
+    @Override
+    public TreeTableView setAppointmentsTable(TreeTableView appointmentsTable) {
+        this.appointmentsTable = appointmentsTable;
+        
+        return this.appointmentsTable;
+    }
+    
+    @Override
     public CustomerEntity getSelectedCustomer() {
         return this.customer;
     }
@@ -49,5 +66,17 @@ public class ContextServiceImpl implements ContextService {
         this.customer = customer;
         
         return this.customer;
+    }
+    
+    @Override
+    public AppointmentEntity getSelectedAppointment() {
+        return this.appointment;
+    }
+    
+    @Override
+    public AppointmentEntity setSelectedAppointment(AppointmentEntity appointment) {
+        this.appointment = appointment;
+        
+        return this.appointment;
     }
 }

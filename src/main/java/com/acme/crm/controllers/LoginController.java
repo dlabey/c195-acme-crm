@@ -107,7 +107,7 @@ public class LoginController extends MainController implements Initializable {
 //            errorMessage.setText("User invalid error");
 //
 //            logger.debug(e.getMessage());
-//        } catch (Exception e) {
+//        } catch (SQLException e) {
 //            errorMessage.setText("Application error");
 //
 //            logger.debug(e.getMessage());

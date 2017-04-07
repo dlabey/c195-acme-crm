@@ -2,6 +2,7 @@ package com.acme.crm.controllers;
 
 import javax.inject.Inject;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.function.BooleanSupplier;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -25,7 +26,6 @@ import com.acme.crm.entities.CityEntity;
 import com.acme.crm.entities.CountryEntity;
 import com.acme.crm.services.ContextService;
 import com.acme.crm.services.CustomerService;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -158,7 +158,7 @@ public class CustomerController extends MainController implements Initializable 
             logger.debug(country.getCountry());
             
             this.countryInput.setText(country.getCountry());
-        } catch (Exception e) {
+        } catch (SQLException e) {
             errorMessage.setText("Application error");
             
             logger.debug(e.getMessage());

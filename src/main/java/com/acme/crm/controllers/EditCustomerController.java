@@ -1,6 +1,7 @@
 package com.acme.crm.controllers;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
@@ -44,20 +45,20 @@ public class EditCustomerController extends CustomerController {
             
             try {
                 updated = this.customerService.editCustomer(this.customer.getCustomerId(),
-                        this.customer.getAddress().getAddressId(),
-                        this.nameInput.getText(), this.addressInput.getText(),
-                        this.address2Input.getText(),
-                        this.cityInput.getValue().getCityId(),
-                        this.postalCodeInput.getText(),
-                        this.phoneInput.getText(), this.activeInput.isSelected(),
-                        this.contextService.getUser().getUserName());
+                    this.customer.getAddress().getAddressId(),
+                    this.nameInput.getText(), this.addressInput.getText(),
+                    this.address2Input.getText(),
+                    this.cityInput.getValue().getCityId(),
+                    this.postalCodeInput.getText(),
+                    this.phoneInput.getText(), this.activeInput.isSelected(),
+                    this.contextService.getUser().getUserName());
                 
                 this.customerService.loadCustomers(
                     this.contextService.getCustomersTable()
                 );
                 
                 logger.debug(updated);
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 errorMessage.setText("Application error");
                 
                 logger.debug(e.getMessage());

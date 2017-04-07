@@ -145,11 +145,11 @@
                                     <columns>
                                         <TreeTableColumn fx:id="appointmentIdCol" maxWidth="1.7976931348623157E308" prefWidth="75.0" text="ID" />
                                         <TreeTableColumn fx:id="appointmentCustomerCol" maxWidth="1.7976931348623157E308" prefWidth="163.0" text="Customer" />
-                                        <TreeTableColumn maxWidth="1.7976931348623157E308" prefWidth="198.0" text="Details" />
+                                        <TreeTableColumn fx:id="appointmentDetailsCol" maxWidth="1.7976931348623157E308" prefWidth="198.0" text="Details" />
                                         <TreeTableColumn fx:id="appointmentStartCol" maxWidth="1.7976931348623157E308" prefWidth="120.0" text="Start" />
                                         <TreeTableColumn fx:id="appointmentEndCol" maxWidth="1.7976931348623157E308" prefWidth="120.0" text="End" />
                                         <TreeTableColumn fx:id="appointmentCreatedCol" maxWidth="1.7976931348623157E308" prefWidth="120.0" text="Created" />
-                                        <TreeTableColumn fx:id="appointmentUpdateCol" maxWidth="1.7976931348623157E308" prefWidth="120.0" text="Updated" />
+                                        <TreeTableColumn fx:id="appointmentUpdatedCol" maxWidth="1.7976931348623157E308" prefWidth="120.0" text="Updated" />
                                     </columns>
                                 </TreeTableView>
                             </children>

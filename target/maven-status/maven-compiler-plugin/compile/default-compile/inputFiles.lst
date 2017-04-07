@@ -1,4 +1,6 @@
 /Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/dao/ReminderDAO.java
+/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/controllers/NewAppointmentController.java
+/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/controllers/EditAppointmentController.java
 /Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/controllers/MainController.java
 /Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/entities/AppointmentEntity.java
 /Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/dao/CountryDAOImpl.java
@@ -7,8 +9,10 @@
 /Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/services/CustomerServiceImpl.java
 /Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/exceptions/InvalidAppointmentException.java
 /Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/controllers/EditCustomerController.java
+/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/services/AppointmentServiceImpl.java
 /Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/dao/AppointmentDAO.java
 /Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/dao/AppointmentDAOImpl.java
+/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/services/AppointmentService.java
 /Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/dao/AddressDAO.java
 /Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/services/ContextService.java
 /Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/dao/CustomerDAO.java
