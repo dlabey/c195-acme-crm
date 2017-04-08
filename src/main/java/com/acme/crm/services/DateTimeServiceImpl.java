@@ -2,14 +2,16 @@ package com.acme.crm.services;
 
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
+import static java.time.temporal.TemporalAdjusters.nextOrSame;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
@@ -20,12 +22,17 @@ import javax.inject.Inject;
 import com.acme.crm.entities.MonthEntity;
 import com.acme.crm.entities.WeekEntity;
 import com.acme.crm.entities.YearEntity;
+import java.time.DayOfWeek;
+import java.time.temporal.ChronoUnit;
+import java.util.TimeZone;
+
 
 public class DateTimeServiceImpl implements DateTimeService {
 
     @Inject
     private DatabaseService dbService;
 
+    @Override
     public List<YearEntity> getYears() throws SQLException {
         Statement stmnt = this.dbService.getConnection().createStatement();
 
@@ -58,6 +65,7 @@ public class DateTimeServiceImpl implements DateTimeService {
         return years;
     }
     
+    @Override
     public List<MonthEntity> getMonths(int year) {
         int min = 1;
         int max = 12;
@@ -84,46 +92,62 @@ public class DateTimeServiceImpl implements DateTimeService {
         return months;
     }
     
+    @Override
     public List<WeekEntity> getWeeks(int year, int month) {
-        int weekInt = 1;
-        
-        List<WeekEntity> weeks = new LinkedList<>();
-        
-        LocalDate startOfWeek = LocalDate.of(year, month, 1);
-        
         Calendar cal = Calendar.getInstance();
+        cal.setFirstDayOfWeek(Calendar.SUNDAY);
+        cal.set(Calendar.MONTH, month - 1);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.clear(Calendar.MINUTE);
         cal.clear(Calendar.SECOND);
         cal.clear(Calendar.MILLISECOND);
         
-        while (startOfWeek.getMonthValue() == month) {
+        List<WeekEntity> weeks = new LinkedList<>();
+        
+        YearMonth yearMonth = YearMonth.of(year, month);
+        
+        // count the end of the weeks
+        // add 1 to account for the partial week if the first day is a Sunday
+        // otherwise add 2 for the partial weeks
+        int partialWeeks = 2;
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+            partialWeeks = 1;
+        }
+        LocalDate startOfMonth = yearMonth.atDay(1)
+                .with(nextOrSame(DayOfWeek.SUNDAY));
+        int weeksInMonth = (int) ChronoUnit.WEEKS
+                .between(startOfMonth, yearMonth.atEndOfMonth()) + partialWeeks;
+        
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        
+        for (int i = 1; i <= weeksInMonth; i++) {
             cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
             
-            ZonedDateTime startDateTime = cal.getTime().toInstant()
-                    .atZone(ZoneOffset.systemDefault()).toLocalDate()
-                    .atStartOfDay(ZoneOffset.UTC);
+            LocalDate startDateTime = cal.getTime().toInstant()
+                    .atZone(ZoneOffset.systemDefault()).toLocalDate();
             
-            String weekStart = new SimpleDateFormat("dd/MM/yyyy").format(startDateTime);
+            String weekStart = startDateTime.atStartOfDay()
+                    .format(dateTimeFormatter);
             
             cal.add(Calendar.DAY_OF_WEEK, 6);
             
-            ZonedDateTime endDateTime = cal.getTime().toInstant()
-                    .atZone(ZoneOffset.systemDefault()).toLocalDate()
-                    .atTime(LocalTime.MAX).atZone(ZoneOffset.UTC);
+            LocalDate endDateTime = cal.getTime().toInstant()
+                    .atZone(ZoneOffset.systemDefault()).toLocalDate();
             
-            String weekEnd = new SimpleDateFormat("dd/MM/yyyy").format(endDateTime);
+            String weekEnd = endDateTime.atTime(LocalTime.MAX)
+                    .format(dateTimeFormatter);
             
             WeekEntity week = new WeekEntity();
             week.setWeek(String.format("%s - %s", weekStart, weekEnd));
-            week.setWeekAsInt(weekInt);
-            week.setStartDateTime(startDateTime);
-            week.setEndDateTime(endDateTime);
+            week.setWeekAsInt(i);
+            week.setStartDateTime(startDateTime.atStartOfDay(ZoneOffset.UTC));
+            week.setEndDateTime(endDateTime.atTime(LocalTime.MAX)
+                    .atZone(ZoneOffset.UTC));
             
             weeks.add(week);
             
             cal.add(Calendar.DAY_OF_WEEK, 1);
-            weekInt++;
         }
         
         return weeks;
