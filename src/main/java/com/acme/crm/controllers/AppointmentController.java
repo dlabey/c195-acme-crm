@@ -1,7 +1,7 @@
 package com.acme.crm.controllers;
 
-
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.ResourceBundle;
@@ -21,6 +21,7 @@ import com.acme.crm.dao.CustomerDAO;
 import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.services.AppointmentService;
 import com.acme.crm.services.ContextService;
+import java.util.LinkedList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tornadofx.control.DateTimePicker;
@@ -88,10 +89,13 @@ public class AppointmentController extends MainController implements Initializab
         });
 
         try {
-            List<CustomerEntity> customers = this.customerDAO.getCustomers();
+            List<CustomerEntity> customers = new LinkedList<>();
+            
+            customers.add(null);
+            customers.addAll(this.customerDAO.getCustomers());
 
             this.customerInput.setItems(FXCollections.observableList(customers));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             logger.debug(e);
         }
         

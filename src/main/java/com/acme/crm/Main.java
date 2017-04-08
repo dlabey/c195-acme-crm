@@ -11,6 +11,8 @@ import com.acme.crm.services.CustomerService;
 import com.acme.crm.services.CustomerServiceImpl;
 import com.acme.crm.services.DatabaseService;
 import com.acme.crm.services.DatabaseServiceImpl;
+import com.acme.crm.services.DateTimeService;
+import com.acme.crm.services.DateTimeServiceImpl;
 import com.acme.crm.services.ContextService;
 import com.acme.crm.services.ContextServiceImpl;
 import com.acme.crm.dao.AddressDAO;
@@ -53,6 +55,7 @@ class GuiceModule extends AbstractModule {
         bind(AppointmentService.class).to(AppointmentServiceImpl.class);
         bind(CustomerService.class).to(CustomerServiceImpl.class);
         bind(DatabaseService.class).to(DatabaseServiceImpl.class);
+        bind(DateTimeService.class).to(DateTimeServiceImpl.class);
         bind(ContextService.class).to(ContextServiceImpl.class);
         
         bind(AddressDAO.class).to(AddressDAOImpl.class);

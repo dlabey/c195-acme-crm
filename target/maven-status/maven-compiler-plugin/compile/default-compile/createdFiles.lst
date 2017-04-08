@@ -2,6 +2,7 @@ com/acme/crm/controllers/ManageController$5.class
 com/acme/crm/entities/ReminderEntity.class
 com/acme/crm/Main.class
 com/acme/crm/entities/CityEntity.class
+com/acme/crm/services/DateTimeServiceImpl.class
 com/acme/crm/dao/UserDAOImpl.class
 com/acme/crm/controllers/ManageController$2.class
 com/acme/crm/controllers/MainController.class
@@ -14,12 +15,16 @@ com/acme/crm/dao/AddressDAOImpl.class
 com/acme/crm/dao/UserDAO.class
 com/acme/crm/services/CustomerService.class
 com/acme/crm/controllers/ManageController$10.class
+com/acme/crm/controllers/ManageController$15.class
+com/acme/crm/services/DateTimeService.class
 com/acme/crm/controllers/LoginController.class
+com/acme/crm/controllers/YearInput.class
 com/acme/crm/controllers/AppointmentController.class
 com/acme/crm/controllers/ManageController$13.class
 com/acme/crm/dao/ReminderDAO.class
 com/acme/crm/services/ContextService.class
 com/acme/crm/controllers/NewCustomerController.class
+com/acme/crm/entities/YearEntity.class
 com/acme/crm/controllers/ManageController$9.class
 com/acme/crm/controllers/ManageController.class
 com/acme/crm/controllers/EditAppointmentController.class
@@ -29,7 +34,9 @@ com/acme/crm/entities/CountryEntity.class
 com/acme/crm/dao/CountryDAO.class
 com/acme/crm/controllers/ManageController$6.class
 com/acme/crm/exceptions/InvalidUserException.class
+com/acme/crm/entities/WeekEntity.class
 com/acme/crm/entities/CustomerEntity.class
+com/acme/crm/controllers/ManageController$16.class
 com/acme/crm/controllers/ManageController$3.class
 com/acme/crm/exceptions/InvalidAppointmentException.class
 com/acme/crm/dao/AppointmentDAO.class
@@ -45,6 +52,7 @@ com/acme/crm/dao/CityDAOImpl.class
 com/acme/crm/App.class
 com/acme/crm/entities/UserEntity.class
 com/acme/crm/services/DatabaseService.class
+com/acme/crm/controllers/ManageController$17.class
 com/acme/crm/controllers/ManageController$4.class
 com/acme/crm/entities/AddressEntity.class
 com/acme/crm/controllers/ManageController$8.class
@@ -57,4 +65,5 @@ com/acme/crm/GuiceModule.class
 com/acme/crm/controllers/ManageController$1.class
 com/acme/crm/controllers/ManageController$14.class
 com/acme/crm/dao/CustomerDAO.class
+com/acme/crm/entities/MonthEntity.class
 com/acme/crm/dao/CustomerDAOImpl.class

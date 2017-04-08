@@ -11,13 +11,6 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/controllers/ManageController.java</file>
-            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/services/CustomerServiceImpl.java</file>
-            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/controllers/NewAppointmentController.java</file>
-            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/dao/AppointmentDAOImpl.java</file>
-            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/services/CustomerService.java</file>
-            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/dao/CustomerDAOImpl.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

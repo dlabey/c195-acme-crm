@@ -2,14 +2,19 @@ package com.acme.crm.controllers;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
@@ -19,15 +24,19 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 import com.acme.crm.dao.AppointmentDAO;
 import com.acme.crm.entities.AddressEntity;
 import com.acme.crm.entities.AppointmentEntity;
 import com.acme.crm.entities.CustomerEntity;
+import com.acme.crm.entities.MonthEntity;
+import com.acme.crm.entities.WeekEntity;
+import com.acme.crm.entities.YearEntity;
 import com.acme.crm.services.AppointmentService;
 import com.acme.crm.services.ContextService;
 import com.acme.crm.services.CustomerService;
-
+import com.acme.crm.services.DateTimeService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,6 +49,9 @@ public class ManageController extends MainController implements Initializable {
     
     @Inject
     protected CustomerService customerService;
+    
+    @Inject
+    protected DateTimeService dateTimeService;
     
     @Inject
     protected AppointmentService appointmentService;
@@ -91,6 +103,15 @@ public class ManageController extends MainController implements Initializable {
     
     @FXML
     private Hyperlink customerEditLink;
+    
+    @FXML
+    private ComboBox<YearEntity> yearInput;
+    
+    @FXML
+    private ComboBox<MonthEntity> monthInput;
+    
+    @FXML
+    private ComboBox<WeekEntity> weekInput;
     
     @FXML
     private TreeTableView appointmentsTable;
@@ -269,6 +290,40 @@ public class ManageController extends MainController implements Initializable {
         }
     }
     
+    @FXML
+    private void handleYearSelect(ActionEvent event) {
+        logger.debug("handleYearSelect");
+        
+        YearEntity year = this.yearInput.getValue();
+        
+        if (year != null) {
+            List<MonthEntity> months = new LinkedList<>();
+            
+            months.add(null);
+            months.addAll(this.dateTimeService.getMonths(year.getYearAsInt()));
+
+            this.monthInput.setItems(FXCollections.observableList(months));
+        }
+    }
+    
+    @FXML
+    private void handleMonthSelect(ActionEvent event) {
+        logger.debug("handleMonthSelect");
+        
+        YearEntity year = this.yearInput.getValue();
+        MonthEntity month = this.monthInput.getValue();
+        
+        if (year != null && month != null) {
+            List<WeekEntity> weeks = new LinkedList<>();
+            
+            weeks.add(null);
+            weeks.addAll(this.dateTimeService.getWeeks(year.getYearAsInt(),
+                    month.getMonthAsInt()));
+
+            this.weekInput.setItems(FXCollections.observableList(weeks));
+        }
+    }
+    
     private void setUpCustomersTable() {
         TreeItem<Void> root = new TreeItem<>();
         
@@ -437,6 +492,61 @@ public class ManageController extends MainController implements Initializable {
     }
     
     private void setUpAppointmentsTable() {
+        this.yearInput.setConverter(new StringConverter<YearEntity>() {
+            @Override
+            public String toString(YearEntity year) {
+                return year.getYear();
+            }
+
+            @Override
+            public YearEntity fromString(String string) {
+                return null;
+            }
+        });
+
+        try {
+            List<YearEntity> years = new LinkedList<>();
+            
+            years.add(null);
+            years.addAll(this.dateTimeService.getYears());
+
+            this.yearInput.setItems(FXCollections.observableList(years));
+        } catch (SQLException e) {
+            logger.debug(e);
+        }
+        
+        this.monthInput.setConverter(new StringConverter<MonthEntity>() {
+            @Override
+            public String toString(MonthEntity month) {
+                return month.getMonth();
+            }
+
+            @Override
+            public MonthEntity fromString(String string) {
+                return null;
+            }
+        });
+        
+        this.weekInput.setConverter(new StringConverter<WeekEntity>() {
+            @Override
+            public String toString(WeekEntity week) {
+                return week.getWeek();
+            }
+
+            @Override
+            public WeekEntity fromString(String string) {
+                return null;
+            }
+        });
+
+        try {
+            List<YearEntity> years = this.dateTimeService.getYears();
+
+            this.yearInput.setItems(FXCollections.observableList(years));
+        } catch (SQLException e) {
+            logger.debug(e);
+        }
+        
         TreeItem<Void> root = new TreeItem<>();
         
         root.setExpanded(true);

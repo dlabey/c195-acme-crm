@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.function.BooleanSupplier;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -98,10 +99,13 @@ public class CustomerController extends MainController implements Initializable 
         });
 
         try {
-            List<CityEntity> cities = this.cityDAO.getCities();
+            List<CityEntity> cities = new LinkedList<>();
+            
+            cities.add(null);
+            cities.addAll(this.cityDAO.getCities());
 
             this.cityInput.setItems(FXCollections.observableList(cities));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             logger.debug(e);
         }
     }
