@@ -1,11 +1,16 @@
 package com.acme.crm.services;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Singleton;
 import javafx.scene.control.TreeTableView;
 
 import com.acme.crm.entities.AppointmentEntity;
 import com.acme.crm.entities.CustomerEntity;
+import com.acme.crm.entities.MonthEntity;
 import com.acme.crm.entities.UserEntity;
+import com.acme.crm.entities.WeekEntity;
+import com.acme.crm.entities.YearEntity;
 
 @Singleton
 public class ContextServiceImpl implements ContextService {
@@ -14,11 +19,17 @@ public class ContextServiceImpl implements ContextService {
     
     private TreeTableView customersTable;
     
+    private Map<String, Object> appointmentsTableFilters;
+    
     private TreeTableView appointmentsTable;
     
     private CustomerEntity customer;
     
     private AppointmentEntity appointment;
+    
+    public ContextServiceImpl() {
+        this.appointmentsTableFilters = new HashMap<>();
+    }
     
     @Override
     public UserEntity getUser() {
@@ -42,6 +53,21 @@ public class ContextServiceImpl implements ContextService {
         this.customersTable = customersTable;
         
         return this.customersTable;
+    }
+    
+    @Override
+    public Map<String, Object> getAppointmentsTableFilters() {
+        return this.appointmentsTableFilters;
+    }
+    
+    @Override
+    public Map<String, Object> setAppointmentsTableFilters(YearEntity year, MonthEntity month,
+            WeekEntity week) {
+        this.appointmentsTableFilters.put("year", year);
+        this.appointmentsTableFilters.put("month", month);
+        this.appointmentsTableFilters.put("week", week);
+        
+        return this.appointmentsTableFilters;
     }
     
     @Override

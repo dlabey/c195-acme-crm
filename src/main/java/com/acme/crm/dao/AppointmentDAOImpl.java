@@ -6,13 +6,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import javax.inject.Inject;
 
 import com.acme.crm.entities.AppointmentEntity;
 import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.services.DatabaseService;
-import java.util.LinkedList;
-import java.util.List;
+import java.time.Year;
 
 public class AppointmentDAOImpl implements AppointmentDAO {
     
@@ -61,11 +63,29 @@ public class AppointmentDAOImpl implements AppointmentDAO {
     }
     
     @Override
-    public List<AppointmentEntity> getAppointments() throws SQLException {
-        Statement stmnt = this.dbService.getConnection().createStatement();
+    public List<AppointmentEntity> getAppointments(Timestamp start,
+            Timestamp end) throws SQLException {
+        PreparedStatement ps = this.dbService.getConnection()
+                .prepareStatement("SELECT * FROM `appointment` `a` "
+                + "JOIN `customer` `c` ON `c`.`customerId` = `a`.`customerId` "
+                + "WHERE `a`.`start` BETWEEN ? AND ? "
+                + "OR `a`.`end` BETWEEN ? AND ? "
+                + "ORDER BY `a`.`start`, `a`.`end`");
         
-        ResultSet rs = stmnt.executeQuery("SELECT * FROM `appointment` `a` "
-                + "JOIN `customer` `c` ON `c`.`customerId` = `a`.`customerId`");
+        if (start == null) {
+            start = Timestamp.valueOf("1000-01-01 01:01:01");
+        }
+        
+        if (end == null) {
+            end = Timestamp.valueOf("9999-12-31 01:01:01");
+        }
+        
+        ps.setTimestamp(1, start);
+        ps.setTimestamp(2, end);
+        ps.setTimestamp(3, start);
+        ps.setTimestamp(4, end);
+        
+        ResultSet rs = ps.executeQuery();
         
         List<AppointmentEntity> appointments = new LinkedList<>();
         

@@ -1,11 +1,11 @@
 package com.acme.crm.dao;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import com.acme.crm.entities.AppointmentEntity;
-
 
 public interface AppointmentDAO {
     
@@ -21,5 +21,6 @@ public interface AppointmentDAO {
     
     public void deleteAppointment(int appointmentId) throws SQLException;
     
-    public List<AppointmentEntity> getAppointments() throws SQLException;
+    public List<AppointmentEntity> getAppointments(Timestamp start,
+            Timestamp end) throws SQLException;
 }

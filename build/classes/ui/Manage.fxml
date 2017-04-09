@@ -129,7 +129,7 @@
                                                 <Insets right="10.0" />
                                             </HBox.margin>
                                         </Label>
-                                        <ComboBox fx:id="weekInput" prefWidth="150.0" />
+                                        <ComboBox fx:id="weekInput" onAction="#handleWeekSelect" prefWidth="150.0" />
                                         <Pane prefHeight="36.0" prefWidth="133.0" />
                               <Hyperlink fx:id="appointmentDeleteLink" disable="true" onMouseClicked="#handleDeleteAppointmentLink" prefHeight="27.0" text="Delete" visited="true">
                                  <graphic>

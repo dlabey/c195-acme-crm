@@ -145,6 +145,12 @@ public class ManageController extends MainController implements Initializable {
     
     private CustomerEntity customerSelected;
     
+    private YearEntity yearSelected;
+    
+    private MonthEntity monthSelected;
+    
+    private WeekEntity weekSelected;
+    
     private AppointmentEntity appointmentSelected;
     
     private Stage newCustomerStage;
@@ -294,13 +300,14 @@ public class ManageController extends MainController implements Initializable {
     private void handleYearSelect(ActionEvent event) {
         logger.debug("handleYearSelect");
         
-        YearEntity year = this.yearInput.getValue();
+        this.setAppointmentsTableFilters(this.yearInput.getValue(),
+                this.monthInput.getValue(), this.weekInput.getValue());
         
-        if (year != null) {
+        if (this.yearSelected != null) {
             List<MonthEntity> months = new LinkedList<>();
             
             months.add(null);
-            months.addAll(this.dateTimeService.getMonths(year.getYearAsInt()));
+            months.addAll(this.dateTimeService.getMonths(this.yearSelected.getYearAsInt()));
 
             this.monthInput.setItems(FXCollections.observableList(months));
         }
@@ -310,18 +317,27 @@ public class ManageController extends MainController implements Initializable {
     private void handleMonthSelect(ActionEvent event) {
         logger.debug("handleMonthSelect");
         
-        YearEntity year = this.yearInput.getValue();
-        MonthEntity month = this.monthInput.getValue();
+        this.setAppointmentsTableFilters(this.yearInput.getValue(),
+                this.monthInput.getValue(), this.weekInput.getValue());
         
-        if (year != null && month != null) {
+        if (this.yearSelected != null && this.monthSelected != null) {
             List<WeekEntity> weeks = new LinkedList<>();
             
             weeks.add(null);
-            weeks.addAll(this.dateTimeService.getWeeks(year.getYearAsInt(),
-                    month.getMonthAsInt()));
+            weeks.addAll(this.dateTimeService.getWeeks(
+                    this.yearSelected.getYearAsInt(),
+                    this.monthSelected.getMonthAsInt()));
 
             this.weekInput.setItems(FXCollections.observableList(weeks));
         }
+    }
+    
+    @FXML
+    private void handleWeekSelect(ActionEvent event) {
+        logger.debug("handleWeekSelect");
+        
+        this.setAppointmentsTableFilters(this.yearInput.getValue(),
+                this.monthInput.getValue(), this.weekInput.getValue());
     }
     
     private void setUpCustomersTable() {
@@ -495,7 +511,7 @@ public class ManageController extends MainController implements Initializable {
         this.yearInput.setConverter(new StringConverter<YearEntity>() {
             @Override
             public String toString(YearEntity year) {
-                return year.getYear();
+                return year == null ? null : year.getYear();
             }
 
             @Override
@@ -518,7 +534,7 @@ public class ManageController extends MainController implements Initializable {
         this.monthInput.setConverter(new StringConverter<MonthEntity>() {
             @Override
             public String toString(MonthEntity month) {
-                return month.getMonth();
+                return month == null ? null : month.getMonth();
             }
 
             @Override
@@ -530,7 +546,7 @@ public class ManageController extends MainController implements Initializable {
         this.weekInput.setConverter(new StringConverter<WeekEntity>() {
             @Override
             public String toString(WeekEntity week) {
-                return week.getWeek();
+                return week == null ? null : week.getWeek();
             }
 
             @Override
@@ -706,7 +722,22 @@ public class ManageController extends MainController implements Initializable {
         }
     }
     
-    public boolean deleteAppointment() {
+    private void setAppointmentsTableFilters(YearEntity year, MonthEntity month,
+            WeekEntity week) {
+        this.yearSelected = year;
+        this.monthSelected = month;
+        this.weekSelected = week;
+        
+        this.contextService.setAppointmentsTableFilters(year, month, week);
+        
+        try {
+            this.appointmentService.loadAppointments(this.appointmentsTable);
+        } catch (SQLException e) {
+            logger.debug(e.getMessage());
+        }
+    }
+    
+    private boolean deleteAppointment() {
         boolean deleted = false;
         
         try {
