@@ -8,9 +8,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormatSymbols;
+import java.time.DayOfWeek;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -22,10 +24,8 @@ import javax.inject.Inject;
 import com.acme.crm.entities.MonthEntity;
 import com.acme.crm.entities.WeekEntity;
 import com.acme.crm.entities.YearEntity;
-import java.time.DayOfWeek;
-import java.time.temporal.ChronoUnit;
-import java.util.TimeZone;
-
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 
 public class DateTimeServiceImpl implements DateTimeService {
 
@@ -47,10 +47,15 @@ public class DateTimeServiceImpl implements DateTimeService {
 
             for (int i = min; i <= max; i++) {
                 LocalDate startOfYear = LocalDate.ofYearDay(i, 1);
-                ZonedDateTime startDateTime = startOfYear
-                        .atStartOfDay(ZoneOffset.UTC);
-                ZonedDateTime endDateTime = startOfYear.with(lastDayOfYear())
-                        .atTime(LocalTime.MAX).atZone(ZoneOffset.UTC);
+                
+                ZonedDateTime startDateTime = ZonedDateTime.ofInstant(
+                        startOfYear.atStartOfDay(),
+                        OffsetDateTime.now(ZoneId.systemDefault()).getOffset(),
+                        ZoneOffset.UTC);
+                ZonedDateTime endDateTime = ZonedDateTime.ofInstant(
+                        startOfYear.with(lastDayOfYear()).atTime(LocalTime.MAX),
+                        OffsetDateTime.now(ZoneId.systemDefault()).getOffset(),
+                        ZoneOffset.UTC);
 
                 YearEntity year = new YearEntity();
                 year.setYear(String.valueOf(i));
@@ -74,10 +79,17 @@ public class DateTimeServiceImpl implements DateTimeService {
         
         for (int i = min; i <= max; i++) {
             LocalDate startOfMonth = LocalDate.of(year, i, 1);
-            ZonedDateTime startDateTime = startOfMonth
-                    .atStartOfDay(ZoneOffset.UTC);
-            ZonedDateTime endDateTime = startOfMonth.with(lastDayOfMonth())
-                    .atTime(LocalTime.MAX).atZone(ZoneOffset.UTC);
+            
+            ZonedDateTime startDateTime = ZonedDateTime.ofInstant(
+                        startOfMonth.atStartOfDay(),
+                        OffsetDateTime.now(ZoneId.systemDefault()).getOffset(),
+                        ZoneOffset.UTC);
+            ZonedDateTime endDateTime = ZonedDateTime.ofInstant(
+                        startOfMonth.with(lastDayOfMonth())
+                        .atTime(LocalTime.MAX),
+                        OffsetDateTime.now(ZoneId.systemDefault()).getOffset(),
+                        ZoneOffset.UTC);
+            
             String monthName = new DateFormatSymbols().getMonths()[i-1];
             
             MonthEntity month = new MonthEntity();
@@ -114,36 +126,48 @@ public class DateTimeServiceImpl implements DateTimeService {
         if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
             partialWeeks = 1;
         }
+        
         LocalDate startOfMonth = yearMonth.atDay(1)
                 .with(nextOrSame(DayOfWeek.SUNDAY));
+        
         int weeksInMonth = (int) ChronoUnit.WEEKS
                 .between(startOfMonth, yearMonth.atEndOfMonth()) + partialWeeks;
         
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter
+                .ofPattern("MM/dd/yyyy");
         
         for (int i = 1; i <= weeksInMonth; i++) {
             cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
             
-            LocalDate startDateTime = cal.getTime().toInstant()
-                    .atZone(ZoneOffset.systemDefault()).toLocalDate();
+            LocalDate startDate = cal.getTime().toInstant()
+                    .atZone(ZoneOffset.UTC).toLocalDate();
             
-            String weekStart = startDateTime.atStartOfDay()
+            String weekStart = startDate.atStartOfDay()
                     .format(dateTimeFormatter);
+            
+            ZonedDateTime startDateTime = ZonedDateTime.ofInstant(
+                    startDate.atStartOfDay(),
+                    OffsetDateTime.now(ZoneId.systemDefault()).getOffset(),
+                    ZoneOffset.UTC);
             
             cal.add(Calendar.DAY_OF_WEEK, 6);
             
-            LocalDate endDateTime = cal.getTime().toInstant()
-                    .atZone(ZoneOffset.systemDefault()).toLocalDate();
+            LocalDate endDate = cal.getTime().toInstant()
+                    .atZone(ZoneOffset.UTC).toLocalDate();
             
-            String weekEnd = endDateTime.atTime(LocalTime.MAX)
+            String weekEnd = endDate.atTime(LocalTime.MAX)
                     .format(dateTimeFormatter);
+            
+            ZonedDateTime endDateTime = ZonedDateTime.ofInstant(
+                    endDate.atTime(LocalTime.MAX),
+                    OffsetDateTime.now(ZoneId.systemDefault()).getOffset(),
+                    ZoneOffset.UTC);
             
             WeekEntity week = new WeekEntity();
             week.setWeek(String.format("%s - %s", weekStart, weekEnd));
             week.setWeekAsInt(i);
-            week.setStartDateTime(startDateTime.atStartOfDay(ZoneOffset.UTC));
-            week.setEndDateTime(endDateTime.atTime(LocalTime.MAX)
-                    .atZone(ZoneOffset.UTC));
+            week.setStartDateTime(startDateTime);
+            week.setEndDateTime(endDateTime);
             
             weeks.add(week);
             

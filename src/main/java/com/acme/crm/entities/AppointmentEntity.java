@@ -1,6 +1,8 @@
 package com.acme.crm.entities;
 
 import java.sql.Timestamp;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 public class AppointmentEntity {
     
@@ -113,7 +115,11 @@ public class AppointmentEntity {
     }
     
     public Timestamp getStart() {
-        return this.start;
+        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(
+                this.start.toLocalDateTime(), ZoneOffset.UTC,
+                ZoneOffset.systemDefault());
+        
+        return Timestamp.valueOf(zonedDateTime.toLocalDateTime());
     }
     
     public Timestamp setStart(Timestamp start) {
@@ -123,7 +129,11 @@ public class AppointmentEntity {
     }
     
     public Timestamp getEnd() {
-        return this.end;
+        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(
+                this.end.toLocalDateTime(), ZoneOffset.UTC,
+                ZoneOffset.systemDefault());
+        
+        return Timestamp.valueOf(zonedDateTime.toLocalDateTime());
     }
     
     public Timestamp setEnd(Timestamp end) {
@@ -143,7 +153,11 @@ public class AppointmentEntity {
     }
     
     public Timestamp getCreateDate() {
-        return this.createDate;
+        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(
+                this.createDate.toLocalDateTime(), ZoneOffset.UTC,
+                ZoneOffset.systemDefault());
+        
+        return Timestamp.valueOf(zonedDateTime.toLocalDateTime());
     }
     
     public Timestamp setCreateDate(Timestamp createDate) {
@@ -153,7 +167,11 @@ public class AppointmentEntity {
     }
     
     public Timestamp getLastUpdate() {
-        return this.lastUpdate;
+        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(
+                this.lastUpdate.toLocalDateTime(), ZoneOffset.UTC,
+                ZoneOffset.systemDefault());
+        
+        return Timestamp.valueOf(zonedDateTime.toLocalDateTime());
     }
     
     public Timestamp setLastUpdate(Timestamp lastUpdate) {

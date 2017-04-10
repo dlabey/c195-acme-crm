@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.List;
 import javax.inject.Inject;
@@ -30,14 +31,14 @@ public class CustomerDAOImpl implements CustomerDAO {
                         + "createdBy, lastUpdate, lastUpdateBy) "
                         + "VALUES(?, ?, ?, ?, ?, ?, ?)",
                         Statement.RETURN_GENERATED_KEYS);
-        Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC));
         
         ps.setString(1, customerName);
         ps.setInt(2, addressId);
         ps.setBoolean(3, active);
-        ps.setTimestamp(4, dateTime);
+        ps.setTimestamp(4, now);
         ps.setString(5, createdBy);
-        ps.setTimestamp(6, dateTime);
+        ps.setTimestamp(6, now);
         ps.setString(7, createdBy);
         ps.executeUpdate();
         
@@ -61,11 +62,11 @@ public class CustomerDAOImpl implements CustomerDAO {
                         + "`lastUpdate` = ?, "
                         + "`lastUpdateBy` = ? "
                         + "WHERE`customerId` = ?");
-        Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC));
         
         ps.setString(1, customerName);
         ps.setBoolean(2, active);
-        ps.setTimestamp(3, dateTime);
+        ps.setTimestamp(3, now);
         ps.setString(4, updatedBy);
         ps.setInt(5, customerId);
         

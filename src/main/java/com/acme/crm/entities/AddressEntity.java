@@ -1,6 +1,8 @@
 package com.acme.crm.entities;
 
 import java.sql.Timestamp;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 public class AddressEntity {
     
@@ -95,7 +97,11 @@ public class AddressEntity {
     }
     
     public Timestamp getCreateDate() {
-        return this.createDate;
+        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(
+                this.createDate.toLocalDateTime(), ZoneOffset.UTC,
+                ZoneOffset.systemDefault());
+        
+        return Timestamp.valueOf(zonedDateTime.toLocalDateTime());
     }
     
     public Timestamp setCreateDate(Timestamp createDate) {
@@ -105,7 +111,11 @@ public class AddressEntity {
     }
     
     public Timestamp getLastUpdate() {
-        return this.lastUpdate;
+        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(
+                this.lastUpdate.toLocalDateTime(), ZoneOffset.UTC,
+                ZoneOffset.systemDefault());
+        
+        return Timestamp.valueOf(zonedDateTime.toLocalDateTime());
     }
     
     public Timestamp setLastUpdate(Timestamp lastUpdate) {

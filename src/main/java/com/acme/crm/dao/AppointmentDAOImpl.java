@@ -6,7 +6,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.List;
 import javax.inject.Inject;
@@ -14,13 +17,12 @@ import javax.inject.Inject;
 import com.acme.crm.entities.AppointmentEntity;
 import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.services.DatabaseService;
-import java.time.Year;
 
 public class AppointmentDAOImpl implements AppointmentDAO {
-    
+
     @Inject
     private DatabaseService dbService;
-    
+
     @Override
     public int createAppointment(int customerId, String title,
             String description, String location, String contact, String url,
@@ -33,62 +35,65 @@ public class AppointmentDAOImpl implements AppointmentDAO {
                         + "lastUpdateBy)"
                         + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         Statement.RETURN_GENERATED_KEYS);
-        Timestamp start = Timestamp.valueOf(startRaw);
-        Timestamp end = Timestamp.valueOf(endRaw);
-        Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
-        
-        
+        ZonedDateTime start = ZonedDateTime.ofInstant(startRaw,
+                OffsetDateTime.now(ZoneId.systemDefault()).getOffset(),
+                ZoneOffset.UTC);
+        ZonedDateTime end = ZonedDateTime.ofInstant(endRaw,
+                OffsetDateTime.now(ZoneId.systemDefault()).getOffset(),
+                ZoneOffset.UTC);
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC));
+
         ps.setInt(1, customerId);
         ps.setString(2, title);
         ps.setString(3, description);
         ps.setString(4, location);
         ps.setString(5, contact);
         ps.setString(6, url);
-        ps.setTimestamp(7, start);
-        ps.setTimestamp(8, end);
-        ps.setTimestamp(9, dateTime);
+        ps.setTimestamp(7, Timestamp.valueOf(start.toLocalDateTime()));
+        ps.setTimestamp(8, Timestamp.valueOf(end.toLocalDateTime()));
+        ps.setTimestamp(9, now);
         ps.setString(10, createdBy);
-        ps.setTimestamp(11, dateTime);
+        ps.setTimestamp(11, now);
         ps.setString(12, createdBy);
         ps.executeUpdate();
-        
+
         ResultSet generatedKeys = ps.getGeneratedKeys();
         int newId = -1;
-        
+
         if (generatedKeys.next()) {
             newId = generatedKeys.getInt(1);
         }
-        
+
         return newId;
     }
-    
+
     @Override
     public List<AppointmentEntity> getAppointments(Timestamp start,
             Timestamp end) throws SQLException {
         PreparedStatement ps = this.dbService.getConnection()
                 .prepareStatement("SELECT * FROM `appointment` `a` "
-                + "JOIN `customer` `c` ON `c`.`customerId` = `a`.`customerId` "
-                + "WHERE `a`.`start` BETWEEN ? AND ? "
-                + "OR `a`.`end` BETWEEN ? AND ? "
-                + "ORDER BY `a`.`start`, `a`.`end`");
-        
+                        + "JOIN `customer` `c` ON `c`.`customerId` = `a`.`customerId` "
+                        + "WHERE `a`.`start` BETWEEN ? AND ? "
+                        + "OR `a`.`end` BETWEEN ? AND ? "
+                        + "ORDER BY `a`.`start`, `a`.`end`");
+
         if (start == null) {
             start = Timestamp.valueOf("1000-01-01 01:01:01");
         }
-        
+
         if (end == null) {
             end = Timestamp.valueOf("9999-12-31 01:01:01");
         }
-        
+
         ps.setTimestamp(1, start);
         ps.setTimestamp(2, end);
         ps.setTimestamp(3, start);
         ps.setTimestamp(4, end);
-        
+
         ResultSet rs = ps.executeQuery();
-        
+
         List<AppointmentEntity> appointments = new LinkedList<>();
-        
+
         while (rs.next()) {
             CustomerEntity customer = new CustomerEntity();
             customer.setCustomerId(rs.getInt("c.customerId"));
@@ -99,7 +104,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
             customer.setCreatedBy(rs.getString("c.createdBy"));
             customer.setLastUpdate(rs.getTimestamp("c.lastUpdate"));
             customer.setLastUpdatedBy(rs.getString("c.lastUpdateBy"));
-            
+
             AppointmentEntity appointment = new AppointmentEntity();
             appointment.setAppointmentId(rs.getInt("a.appointmentId"));
             appointment.setCustomer(customer);
@@ -114,17 +119,17 @@ public class AppointmentDAOImpl implements AppointmentDAO {
             appointment.setCreatedBy(rs.getString("c.createdBy"));
             appointment.setLastUpdate(rs.getTimestamp("c.lastUpdate"));
             appointment.setLastUpdatedBy(rs.getString("c.lastUpdateBy"));
-            
+
             appointments.add(appointment);
         }
-        
+
         return appointments;
     }
-    
+
     @Override
     public void updateAppointment(int appointmentId, int customerId,
             String title, String description, String location, String contact,
-            String url, LocalDateTime start, LocalDateTime end,
+            String url, LocalDateTime startRaw, LocalDateTime endRaw,
             String updatedBy) throws SQLException {
         PreparedStatement ps = this.dbService.getConnection()
                 .prepareStatement("UPDATE `appointment` "
@@ -139,28 +144,34 @@ public class AppointmentDAOImpl implements AppointmentDAO {
                         + "`lastUpdate` = ?, "
                         + "`lastUpdateBy` = ? "
                         + "WHERE `appointmentId` = ?");
-        Timestamp dateTime = Timestamp.valueOf(LocalDateTime.now());
-        
+        ZonedDateTime start = ZonedDateTime.ofInstant(startRaw,
+                OffsetDateTime.now(ZoneId.systemDefault()).getOffset(),
+                ZoneOffset.UTC);
+        ZonedDateTime end = ZonedDateTime.ofInstant(endRaw,
+                OffsetDateTime.now(ZoneId.systemDefault()).getOffset(),
+                ZoneOffset.UTC);
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC));
+
         ps.setInt(1, customerId);
         ps.setString(2, title);
         ps.setString(3, description);
         ps.setString(4, location);
         ps.setString(5, contact);
         ps.setString(6, url);
-        ps.setTimestamp(7, Timestamp.valueOf(start));
-        ps.setTimestamp(8, Timestamp.valueOf(end));
-        ps.setTimestamp(9, dateTime);
+        ps.setTimestamp(7, Timestamp.valueOf(start.toLocalDateTime()));
+        ps.setTimestamp(8, Timestamp.valueOf(end.toLocalDateTime()));
+        ps.setTimestamp(9, now);
         ps.setString(10, updatedBy);
         ps.setInt(11, appointmentId);
         ps.executeUpdate();
     }
-    
+
     @Override
     public void deleteAppointment(int appointmentId) throws SQLException {
         PreparedStatement ps = this.dbService.getConnection()
                 .prepareStatement("DELETE FROM `appointment` "
                         + "WHERE `appointmentId` = ?");
-        
+
         ps.setInt(1, appointmentId);
         ps.executeUpdate();
     }

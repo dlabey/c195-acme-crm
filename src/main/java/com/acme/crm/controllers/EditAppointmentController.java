@@ -30,12 +30,8 @@ public class EditAppointmentController extends AppointmentController {
         this.locationInput.setText(this.appointment.getLocation());
         this.contactInput.setText(this.appointment.getContact());
         this.urlInput.setText(this.appointment.getUrl());
-        this.startInput.setDateTimeValue(
-            this.appointment.getStart().toLocalDateTime()
-        );
-        this.endInput.setDateTimeValue(
-            this.appointment.getEnd().toLocalDateTime()
-        );
+        this.startInput.setDateTimeValue(this.appointment.getStart().toLocalDateTime());
+        this.endInput.setDateTimeValue(this.appointment.getEnd().toLocalDateTime());
     }
     
     @FXML
