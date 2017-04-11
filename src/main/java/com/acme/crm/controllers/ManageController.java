@@ -57,9 +57,6 @@ public class ManageController extends MainController implements Initializable {
     protected AppointmentService appointmentService;
     
     @Inject
-    protected AppointmentDAO appointmentDAO;
-    
-    @Inject
     private Provider<FXMLLoader> loader;
     
     @Inject
@@ -741,7 +738,7 @@ public class ManageController extends MainController implements Initializable {
         boolean deleted = false;
         
         try {
-            this.appointmentDAO.deleteAppointment(
+            this.appointmentService.deleteAppointment(
                 this.appointmentSelected.getAppointmentId()
             );
             

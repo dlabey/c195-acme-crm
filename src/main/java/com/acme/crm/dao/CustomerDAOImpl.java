@@ -23,8 +23,8 @@ public class CustomerDAOImpl implements CustomerDAO {
     private DatabaseService dbService;
     
     @Override
-    public int createCustomer(String customerName, int addressId,boolean active,
-            String createdBy) throws SQLException {
+    public int createCustomer(String customerName, int addressId,
+            boolean active, String createdBy) throws SQLException {
         PreparedStatement ps = this.dbService.getConnection()
                 .prepareStatement("INSERT INTO `customer` "
                         + "(customerName, addressId, active, createDate, "
@@ -61,7 +61,7 @@ public class CustomerDAOImpl implements CustomerDAO {
                         + "`active` = ?, "
                         + "`lastUpdate` = ?, "
                         + "`lastUpdateBy` = ? "
-                        + "WHERE`customerId` = ?");
+                        + "WHERE `customerId` = ?");
         Timestamp now = Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC));
         
         ps.setString(1, customerName);

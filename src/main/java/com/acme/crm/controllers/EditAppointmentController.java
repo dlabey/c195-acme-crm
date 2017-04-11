@@ -44,7 +44,7 @@ public class EditAppointmentController extends AppointmentController {
             boolean updated = false;
         
             try {
-                this.appointmentDAO.updateAppointment(
+                this.appointmentService.editAppointment(
                     this.appointment.getAppointmentId(),
                     this.customerInput.getValue().getCustomerId(),
                     this.titleInput.getText(),

@@ -13,12 +13,12 @@ import javafx.scene.control.TreeTableView;
 import com.acme.crm.dao.AddressDAO;
 import com.acme.crm.dao.CustomerDAO;
 import com.acme.crm.entities.CustomerEntity;
-
 import org.apache.logging.log4j.LogManager;
 
 public class CustomerServiceImpl implements CustomerService {
 
-    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(CustomerServiceImpl.class);
+    private static final org.apache.logging.log4j.Logger logger =
+            LogManager.getLogger(CustomerServiceImpl.class);
 
     @Inject
     private DatabaseService dbService;
@@ -66,7 +66,7 @@ public class CustomerServiceImpl implements CustomerService {
             this.dbService.getConnection().commit();
 
             updated = true;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             this.dbService.getConnection().rollback();
 
             logger.debug(e.getMessage());
@@ -100,7 +100,7 @@ public class CustomerServiceImpl implements CustomerService {
             this.dbService.getConnection().commit();
 
             deleted = true;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             this.dbService.getConnection().rollback();
 
             logger.debug(e.getMessage());

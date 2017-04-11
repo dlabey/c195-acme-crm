@@ -1,14 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.acme.crm.dao;
 
-/**
- *
- * @author darren
- */
-public class ReminderDAO {
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+
+import com.acme.crm.entities.AppointmentEntity;
+
+
+public interface ReminderDAO {
     
+    public PreparedStatement createReminder(AppointmentEntity appointment,
+            String createdBy) throws SQLException;
+    
+    public PreparedStatement updateReminder(AppointmentEntity appointment)
+            throws SQLException;
+    
+    public PreparedStatement deleteReminder(int appointmentId)
+            throws SQLException;
 }

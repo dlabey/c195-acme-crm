@@ -25,6 +25,8 @@ import com.acme.crm.dao.CountryDAO;
 import com.acme.crm.dao.CountryDAOImpl;
 import com.acme.crm.dao.CustomerDAO;
 import com.acme.crm.dao.CustomerDAOImpl;
+import com.acme.crm.dao.ReminderDAO;
+import com.acme.crm.dao.ReminderDAOImpl;
 import com.acme.crm.dao.UserDAO;
 import com.acme.crm.dao.UserDAOImpl;
 
@@ -63,6 +65,7 @@ class GuiceModule extends AbstractModule {
         bind(CityDAO.class).to(CityDAOImpl.class);
         bind(CountryDAO.class).to(CountryDAOImpl.class);
         bind(CustomerDAO.class).to(CustomerDAOImpl.class);
+        bind(ReminderDAO.class).to(ReminderDAOImpl.class);
         bind(UserDAO.class).to(UserDAOImpl.class);
     }
 }

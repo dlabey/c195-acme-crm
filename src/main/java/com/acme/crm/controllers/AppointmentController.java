@@ -16,7 +16,6 @@ import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 
-import com.acme.crm.dao.AppointmentDAO;
 import com.acme.crm.dao.CustomerDAO;
 import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.services.AppointmentService;
@@ -28,16 +27,14 @@ import tornadofx.control.DateTimePicker;
 
 public class AppointmentController extends MainController implements Initializable {
     
-    private static final Logger logger = LogManager.getLogger(AppointmentController.class);
+    private static final Logger logger =
+            LogManager.getLogger(AppointmentController.class);
 
     @Inject
     protected ContextService contextService;
     
     @Inject
     protected AppointmentService appointmentService;
-    
-    @Inject
-    protected AppointmentDAO appointmentDAO;
     
     @Inject
     protected CustomerDAO customerDAO;

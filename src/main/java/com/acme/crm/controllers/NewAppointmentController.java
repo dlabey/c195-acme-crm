@@ -3,19 +3,14 @@ package com.acme.crm.controllers;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import javax.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 
-import com.acme.crm.dao.AppointmentDAO;
 import org.apache.logging.log4j.LogManager;
 
 public class NewAppointmentController extends AppointmentController {
     
     private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(NewAppointmentController.class);
-
-    @Inject
-    private AppointmentDAO appointmentDAO;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -34,7 +29,7 @@ public class NewAppointmentController extends AppointmentController {
             int appointmentId = 0;
             
             try {
-                appointmentId = this.appointmentDAO.createAppointment(
+                appointmentId = this.appointmentService.createAppointment(
                         this.customerInput.getValue().getCustomerId(),
                         this.titleInput.getText(),
                         this.descriptionInput.getText(),
