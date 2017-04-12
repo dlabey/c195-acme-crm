@@ -20,6 +20,7 @@ import com.acme.crm.dao.CustomerDAO;
 import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.services.AppointmentService;
 import com.acme.crm.services.ContextService;
+import com.acme.crm.services.ReminderService;
 import java.util.LinkedList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +36,9 @@ public class AppointmentController extends MainController implements Initializab
     
     @Inject
     protected AppointmentService appointmentService;
+    
+    @Inject
+    ReminderService reminderService;
     
     @Inject
     protected CustomerDAO customerDAO;
@@ -170,6 +174,8 @@ public class AppointmentController extends MainController implements Initializab
                 this.endInput.setValue(null);
                 
                 ((Node) event.getSource()).getScene().getWindow().hide();
+                
+                this.reminderService.scheduleReminders();
             }
         }
     }

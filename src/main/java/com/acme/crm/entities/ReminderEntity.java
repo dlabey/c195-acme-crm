@@ -12,6 +12,8 @@ public class ReminderEntity {
     
     private int appointmentId;
     
+    private AppointmentEntity appointment;
+    
     private String createdBy;
     
     private Timestamp createDate;
@@ -27,11 +29,7 @@ public class ReminderEntity {
     }
     
     public Timestamp getReminderDate() {
-        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(
-                this.reminderDate.toLocalDateTime(), ZoneOffset.UTC,
-                ZoneOffset.systemDefault());
-        
-        return Timestamp.valueOf(zonedDateTime.toLocalDateTime());
+        return this.reminderDate;
     }
     
     public Timestamp setReminderDate(Timestamp createDate) {
@@ -48,6 +46,16 @@ public class ReminderEntity {
         this.appointmentId = appointmentId;
         
         return this.appointmentId;
+    }
+    
+    public AppointmentEntity getAppointment() {
+        return this.appointment;
+    }
+    
+    public AppointmentEntity setAppointment(AppointmentEntity appointment) {
+        this.appointment = appointment;
+        
+        return this.appointment;
     }
     
     public String getCreatedBy() {

@@ -106,6 +106,8 @@ public class AppointmentServiceImpl implements AppointmentService {
             AppointmentEntity appointment = this.appointmentDAO.getAppointment(
                     appointmentId);
             
+            logger.debug(appointment.getStart());
+            
             PreparedStatement reminderPs = this.reminderDAO.updateReminder(
                     appointment);
             reminderPs.executeUpdate();

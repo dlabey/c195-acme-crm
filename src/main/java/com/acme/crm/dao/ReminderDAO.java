@@ -2,10 +2,10 @@ package com.acme.crm.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.util.List;
 
 import com.acme.crm.entities.AppointmentEntity;
-
+import com.acme.crm.entities.ReminderEntity;
 
 public interface ReminderDAO {
     
@@ -16,5 +16,8 @@ public interface ReminderDAO {
             throws SQLException;
     
     public PreparedStatement deleteReminder(int appointmentId)
+            throws SQLException;
+    
+    public List<ReminderEntity> getRemindersByUser(String createdBy)
             throws SQLException;
 }

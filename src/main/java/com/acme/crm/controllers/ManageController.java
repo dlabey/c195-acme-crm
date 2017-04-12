@@ -26,7 +26,6 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
-import com.acme.crm.dao.AppointmentDAO;
 import com.acme.crm.entities.AddressEntity;
 import com.acme.crm.entities.AppointmentEntity;
 import com.acme.crm.entities.CustomerEntity;

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Singleton;
 import javafx.scene.control.TreeTableView;
+import javafx.stage.Stage;
 
 import com.acme.crm.entities.AppointmentEntity;
 import com.acme.crm.entities.CustomerEntity;
@@ -12,10 +13,13 @@ import com.acme.crm.entities.UserEntity;
 import com.acme.crm.entities.WeekEntity;
 import com.acme.crm.entities.YearEntity;
 
+
 @Singleton
 public class ContextServiceImpl implements ContextService {
     
     private UserEntity user;
+    
+    private Stage manageStage;
     
     private TreeTableView customersTable;
     
@@ -41,6 +45,18 @@ public class ContextServiceImpl implements ContextService {
         this.user = user;
         
         return this.user;
+    }
+    
+    @Override
+    public Stage getManageStage() {
+        return this.manageStage;
+    }
+    
+    @Override
+    public Stage setManageStage(Stage manageStage) {
+        this.manageStage = manageStage;
+        
+        return this.manageStage;
     }
     
     @Override

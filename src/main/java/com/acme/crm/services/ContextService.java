@@ -1,7 +1,8 @@
 package com.acme.crm.services;
 
-import javafx.scene.control.TreeTableView;
 import java.util.Map;
+import javafx.scene.control.TreeTableView;
+import javafx.stage.Stage;
 
 import com.acme.crm.entities.AppointmentEntity;
 import com.acme.crm.entities.CustomerEntity;
@@ -15,6 +16,10 @@ public interface ContextService {
     public UserEntity getUser();
     
     public UserEntity setUser(UserEntity user);
+    
+    public Stage getManageStage();
+    
+    public Stage setManageStage(Stage manageStage);
     
     public TreeTableView getCustomersTable();
     

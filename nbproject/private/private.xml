@@ -11,6 +11,21 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/services/ReminderService.java</file>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/services/ReminderServiceImpl.java</file>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/controllers/AppointmentController.java</file>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/services/ContextServiceImpl.java</file>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/controllers/LoginController.java</file>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/dao/ReminderDAO.java</file>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/controllers/EditAppointmentController.java</file>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/dao/ReminderDAOImpl.java</file>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/controllers/ManageController.java</file>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/services/ContextService.java</file>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/Main.java</file>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/controllers/NewAppointmentController.java</file>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/services/AppointmentServiceImpl.java</file>
+            <file>file:/Users/darren/Projects/acme-crm/src/main/java/com/acme/crm/entities/ReminderEntity.java</file>
+        </group>
     </open-files>
 </project-private>

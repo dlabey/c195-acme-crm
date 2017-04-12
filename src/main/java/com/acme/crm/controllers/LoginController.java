@@ -22,6 +22,7 @@ import com.acme.crm.dao.UserDAO;
 import com.acme.crm.entities.UserEntity;
 import com.acme.crm.exceptions.InvalidUserException;
 import com.acme.crm.services.ContextService;
+import com.acme.crm.services.ReminderService;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -41,6 +42,9 @@ public class LoginController extends MainController implements Initializable {
 
     @Inject
     ContextService contextService;
+    
+    @Inject
+    ReminderService reminderService;
 
     @FXML
     private TextField usernameInput;
@@ -101,6 +105,10 @@ public class LoginController extends MainController implements Initializable {
             stage.setTitle("Manage");
             stage.setScene(new Scene(root));
             stage.show();
+            
+            this.contextService.setManageStage(stage);
+            
+            this.reminderService.scheduleReminders();
 //        } catch (InvalidUserException e) {
 //            errorMessage.setText("User invalid error");
 //
