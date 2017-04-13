@@ -36,12 +36,14 @@ import com.acme.crm.services.AppointmentService;
 import com.acme.crm.services.ContextService;
 import com.acme.crm.services.CustomerService;
 import com.acme.crm.services.DateTimeService;
+import javafx.scene.control.Alert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class ManageController extends MainController implements Initializable {
 
-    private static final Logger logger = LogManager.getLogger(ManageController.class);
+    private static final Logger LOGGER =
+            LogManager.getLogger(ManageController.class);
 
     @Inject
     private ContextService contextService;
@@ -170,7 +172,7 @@ public class ManageController extends MainController implements Initializable {
 
     @FXML
     private void handleCustomerDeselect(MouseEvent event) throws Exception {
-        logger.debug("handleCustomerDeselect");
+        LOGGER.debug("handleCustomerDeselect");
         
         this.customerSelected = null;
         this.customerDeleteLink.setDisable(true);
@@ -180,7 +182,7 @@ public class ManageController extends MainController implements Initializable {
 
     @FXML
     private void handleNewCustomerLink(MouseEvent event) throws Exception {
-        logger.debug("handleNewCustomerLink");
+        LOGGER.debug("handleNewCustomerLink");
        
         if (newCustomerStage == null) {
             FXMLLoader loader = this.loader.get();
@@ -201,7 +203,7 @@ public class ManageController extends MainController implements Initializable {
     
     @FXML
     private void handleDeleteCustomerLink(MouseEvent event) throws Exception {
-        logger.debug("handleDeleteCustomerLink");
+        LOGGER.debug("handleDeleteCustomerLink");
         
         if (!this.customerDeleteLink.isDisabled() && this.customerSelected != null) {
             this.deleteCustomer();
@@ -210,7 +212,7 @@ public class ManageController extends MainController implements Initializable {
     
     @FXML
     private void handleEditCustomerLink(MouseEvent event) throws Exception {
-        logger.debug("handleEditCustomerLink");
+        LOGGER.debug("handleEditCustomerLink");
         
         if (!this.customerEditLink.isDisabled() && this.customerSelected != null) {
             if (editCustomerStage != null) {
@@ -236,7 +238,7 @@ public class ManageController extends MainController implements Initializable {
 
     @FXML
     private void handleNewAppointmentLink(MouseEvent event) throws Exception {
-        logger.debug("handleNewAppointmentLink");
+        LOGGER.debug("handleNewAppointmentLink");
        
         if (newAppointmentStage == null) {
             FXMLLoader loader = this.loader.get();
@@ -257,7 +259,7 @@ public class ManageController extends MainController implements Initializable {
     
     @FXML
     private void handleEditAppointmentLink(MouseEvent event) throws Exception {
-        logger.debug("handleEditAppointmentLink");
+        LOGGER.debug("handleEditAppointmentLink");
         
         if (!this.appointmentEditLink.isDisabled() &&
                 this.appointmentSelected != null) {
@@ -284,7 +286,7 @@ public class ManageController extends MainController implements Initializable {
     
     @FXML
     private void handleDeleteAppointmentLink(MouseEvent event) throws Exception {
-        logger.debug("handleDeleteAppointmentLink");
+        LOGGER.debug("handleDeleteAppointmentLink");
         
         if (!this.appointmentDeleteLink.isDisabled() &&
                 this.appointmentSelected != null) {
@@ -294,7 +296,7 @@ public class ManageController extends MainController implements Initializable {
     
     @FXML
     private void handleYearSelect(ActionEvent event) {
-        logger.debug("handleYearSelect");
+        LOGGER.debug("handleYearSelect");
         
         this.setAppointmentsTableFilters(this.yearInput.getValue(),
                 this.monthInput.getValue(), this.weekInput.getValue());
@@ -311,7 +313,7 @@ public class ManageController extends MainController implements Initializable {
     
     @FXML
     private void handleMonthSelect(ActionEvent event) {
-        logger.debug("handleMonthSelect");
+        LOGGER.debug("handleMonthSelect");
         
         this.setAppointmentsTableFilters(this.yearInput.getValue(),
                 this.monthInput.getValue(), this.weekInput.getValue());
@@ -330,7 +332,7 @@ public class ManageController extends MainController implements Initializable {
     
     @FXML
     private void handleWeekSelect(ActionEvent event) {
-        logger.debug("handleWeekSelect");
+        LOGGER.debug("handleWeekSelect");
         
         this.setAppointmentsTableFilters(this.yearInput.getValue(),
                 this.monthInput.getValue(), this.weekInput.getValue());
@@ -472,8 +474,8 @@ public class ManageController extends MainController implements Initializable {
         
         try {
             this.customerService.loadCustomers(this.customersTable);
-        } catch (Exception e) {
-            logger.debug(e.getMessage());
+        } catch (SQLException ex) {
+            LOGGER.error(ex.getMessage());
         }
     }
     
@@ -490,14 +492,26 @@ public class ManageController extends MainController implements Initializable {
     public boolean deleteCustomer() {
         boolean deleted = false;
         
+        Runnable popup = () -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Customer Deleted");
+            alert.setHeaderText(null);
+            alert.setContentText("The Customer has successfully been deleted.");
+            alert.show();
+        };
+        
         try {
             deleted = this.customerService.deleteCustomer(
                             this.customerSelected.getCustomerId(),
                             this.customerSelected.getAddress().getAddressId());
             
             this.customerService.loadCustomers(this.customersTable);
-        } catch (SQLException e) {
-            logger.debug(e.getMessage());
+        } catch (SQLException ex) {
+            LOGGER.error(ex.getMessage());
+        }
+        
+        if (deleted) {
+            popup.run();
         }
         
         return deleted;
@@ -523,8 +537,8 @@ public class ManageController extends MainController implements Initializable {
             years.addAll(this.dateTimeService.getYears());
 
             this.yearInput.setItems(FXCollections.observableList(years));
-        } catch (SQLException e) {
-            logger.debug(e);
+        } catch (SQLException ex) {
+            LOGGER.error(ex.getMessage());
         }
         
         this.monthInput.setConverter(new StringConverter<MonthEntity>() {
@@ -555,8 +569,8 @@ public class ManageController extends MainController implements Initializable {
             List<YearEntity> years = this.dateTimeService.getYears();
 
             this.yearInput.setItems(FXCollections.observableList(years));
-        } catch (SQLException e) {
-            logger.debug(e);
+        } catch (SQLException ex) {
+            LOGGER.error(ex.getMessage());
         }
         
         TreeItem<Void> root = new TreeItem<>();
@@ -702,8 +716,8 @@ public class ManageController extends MainController implements Initializable {
         
         try {
             this.appointmentService.loadAppointments(this.appointmentsTable);
-        } catch (SQLException e) {
-            logger.debug(e.getMessage());
+        } catch (SQLException ex) {
+            LOGGER.error(ex.getMessage());
         }
     }
     
@@ -728,22 +742,34 @@ public class ManageController extends MainController implements Initializable {
         
         try {
             this.appointmentService.loadAppointments(this.appointmentsTable);
-        } catch (SQLException e) {
-            logger.debug(e.getMessage());
+        } catch (SQLException ex) {
+            LOGGER.error(ex.getMessage());
         }
     }
     
     private boolean deleteAppointment() {
         boolean deleted = false;
         
+        Runnable popup = () -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Appointment Deleted");
+            alert.setHeaderText(null);
+            alert.setContentText("The Appointment has successfully been deleted.");
+            alert.show();
+        };
+        
         try {
-            this.appointmentService.deleteAppointment(
+            deleted = this.appointmentService.deleteAppointment(
                 this.appointmentSelected.getAppointmentId()
             );
             
             this.appointmentService.loadAppointments(this.appointmentsTable);
-        } catch (SQLException e) {
-            logger.debug(e.getMessage());
+        } catch (SQLException ex) {
+            LOGGER.error(ex.getMessage());
+        }
+        
+        if (deleted) {
+            popup.run();
         }
         
         return deleted;

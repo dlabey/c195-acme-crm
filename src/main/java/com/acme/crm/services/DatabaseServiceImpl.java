@@ -13,6 +13,7 @@ import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 public class DatabaseServiceImpl implements DatabaseService {
     
     private static Connection connection;
+    
     private final Properties config;
     
     public DatabaseServiceImpl() throws IOException {
@@ -36,10 +37,10 @@ public class DatabaseServiceImpl implements DatabaseService {
     public void setConnection() throws SQLException {
         MysqlDataSource mysqlDataSource = new MysqlDataSource();
             
-        mysqlDataSource.setServerName(config.getProperty("host"));
-        mysqlDataSource.setDatabaseName(config.getProperty("name"));
-        mysqlDataSource.setUser(config.getProperty("user"));
-        mysqlDataSource.setPassword(config.getProperty("password"));
+        mysqlDataSource.setServerName(this.config.getProperty("host"));
+        mysqlDataSource.setDatabaseName(this.config.getProperty("name"));
+        mysqlDataSource.setUser(this.config.getProperty("user"));
+        mysqlDataSource.setPassword(this.config.getProperty("password"));
 
         DatabaseServiceImpl.connection = (Connection) mysqlDataSource.getConnection();
     }

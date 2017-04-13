@@ -4,13 +4,16 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 
 import org.apache.logging.log4j.LogManager;
 
 public class NewAppointmentController extends AppointmentController {
     
-    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(NewAppointmentController.class);
+    private static final org.apache.logging.log4j.Logger LOGGER =
+            LogManager.getLogger(NewAppointmentController.class);
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -21,12 +24,20 @@ public class NewAppointmentController extends AppointmentController {
     
     @FXML
     protected void handleSubmit(MouseEvent event) throws Exception {
-        logger.debug("handleSubmit");
+        LOGGER.debug("handleSubmit");
         
         super.handleSubmit(event, () -> {
-            logger.debug("childHandler");
+            LOGGER.debug("childHandler");
             
             int appointmentId = 0;
+            
+            Runnable popup = () -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Appointment Created");
+                alert.setHeaderText(null);
+                alert.setContentText("The Appointment has successfully been created.");
+                alert.show();
+            };
             
             try {
                 appointmentId = this.appointmentService.createAppointment(
@@ -44,14 +55,18 @@ public class NewAppointmentController extends AppointmentController {
                     this.contextService.getAppointmentsTable()
                 );
                 
-                logger.debug(appointmentId);
-            } catch (SQLException e) {
+                LOGGER.debug(appointmentId);
+            } catch (SQLException ex) {
                 errorMessage.setText("Application error");
 
-                logger.debug(e.getMessage());
+                LOGGER.error(ex.getMessage());
             }
             
-            return appointmentId > 0;
+            boolean created = appointmentId > 0;
+            
+            popup.run();
+            
+            return created;
         });
     }
 }

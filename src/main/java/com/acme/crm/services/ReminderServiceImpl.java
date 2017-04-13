@@ -25,7 +25,7 @@ import org.apache.logging.log4j.LogManager;
 @Singleton
 public class ReminderServiceImpl implements ReminderService {
 
-    private static final org.apache.logging.log4j.Logger logger
+    private static final org.apache.logging.log4j.Logger LOGGER
             = LogManager.getLogger(ReminderServiceImpl.class);
 
     @Inject
@@ -48,7 +48,7 @@ public class ReminderServiceImpl implements ReminderService {
 
     @Override
     public void scheduleReminders() {
-        logger.debug("scheduleReminders");
+        LOGGER.debug("scheduleReminders");
 
         String consultantName = this.contextService.getUser().getUserName();
 
@@ -69,7 +69,7 @@ public class ReminderServiceImpl implements ReminderService {
                         r.getReminderDate().toLocalDateTime(),
                         ChronoUnit.SECONDS);
                 
-                logger.debug(secondsUntilReminder);
+                LOGGER.debug(secondsUntilReminder);
 
                 Runnable reminder = () -> {
                     ReminderServiceImpl.this.shownReminders
@@ -109,14 +109,14 @@ public class ReminderServiceImpl implements ReminderService {
 
                 this.scheduledReminders.put(r.getAppointmentId(), scheduledFuture);
             });
-        } catch (SQLException e) {
-            logger.debug(e.getMessage());
+        } catch (SQLException ex) {
+            LOGGER.error(ex.getMessage());
         }
     }
 
     @Override
     public boolean cancelReminder(int appointmentId) {
-        logger.debug("cancelReminder");
+        LOGGER.debug("cancelReminder");
 
         boolean cancelled = false;
 

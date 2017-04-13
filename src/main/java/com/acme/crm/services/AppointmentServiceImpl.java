@@ -25,7 +25,7 @@ import org.apache.logging.log4j.LogManager;
 
 public class AppointmentServiceImpl implements AppointmentService {
 
-    private static final org.apache.logging.log4j.Logger logger =
+    private static final org.apache.logging.log4j.Logger LOGGER =
             LogManager.getLogger(AppointmentServiceImpl.class);
     
     @Inject
@@ -74,14 +74,14 @@ public class AppointmentServiceImpl implements AppointmentService {
             reminderPs.executeUpdate();
             
             this.dbService.getConnection().commit();
-        } catch (SQLException e) {
+        } catch (SQLException ex) {
             this.dbService.getConnection().rollback();
 
-            logger.debug(e.getMessage());
+            LOGGER.error(ex.getMessage());
         } finally {
             this.dbService.getConnection().setAutoCommit(true);
 
-            logger.debug(appointmentId);
+            LOGGER.debug(appointmentId);
         }
         
         return appointmentId;
@@ -106,7 +106,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             AppointmentEntity appointment = this.appointmentDAO.getAppointment(
                     appointmentId);
             
-            logger.debug(appointment.getStart());
+            LOGGER.debug(appointment.getStart());
             
             PreparedStatement reminderPs = this.reminderDAO.updateReminder(
                     appointment);
@@ -115,14 +115,14 @@ public class AppointmentServiceImpl implements AppointmentService {
             this.dbService.getConnection().commit();
             
             updated = true;
-        } catch (SQLException e) {
+        } catch (SQLException ex) {
             this.dbService.getConnection().rollback();
 
-            logger.debug(e.getMessage());
+            LOGGER.error(ex.getMessage());
         } finally {
             this.dbService.getConnection().setAutoCommit(true);
 
-            logger.debug(updated);
+            LOGGER.debug(updated);
         }
 
         return updated;
@@ -146,14 +146,14 @@ public class AppointmentServiceImpl implements AppointmentService {
             this.dbService.getConnection().commit();
             
             deleted = true;
-        } catch (SQLException e) {
+        } catch (SQLException ex) {
             this.dbService.getConnection().rollback();
 
-            logger.debug(e.getMessage());
+            LOGGER.error(ex.getMessage());
         } finally {
             this.dbService.getConnection().setAutoCommit(true);
 
-            logger.debug(deleted);
+            LOGGER.debug(deleted);
         }
 
         return deleted;

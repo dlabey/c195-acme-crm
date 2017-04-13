@@ -2,8 +2,10 @@ package com.acme.crm.controllers;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.function.BooleanSupplier;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
 import javafx.collections.FXCollections;
@@ -16,19 +18,23 @@ import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 
+import com.acme.crm.dao.AppointmentDAO;
 import com.acme.crm.dao.CustomerDAO;
 import com.acme.crm.entities.CustomerEntity;
+import com.acme.crm.enums.InvalidAppointmentTypeEnum;
+import com.acme.crm.exceptions.InvalidAppointmentException;
+import com.acme.crm.exceptions.OverlappingAppointmentException;
 import com.acme.crm.services.AppointmentService;
 import com.acme.crm.services.ContextService;
 import com.acme.crm.services.ReminderService;
-import java.util.LinkedList;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tornadofx.control.DateTimePicker;
 
 public class AppointmentController extends MainController implements Initializable {
     
-    private static final Logger logger =
+    private static final Logger LOGGER =
             LogManager.getLogger(AppointmentController.class);
 
     @Inject
@@ -39,6 +45,9 @@ public class AppointmentController extends MainController implements Initializab
     
     @Inject
     ReminderService reminderService;
+    
+    @Inject
+    protected AppointmentDAO appointmentDAO;
     
     @Inject
     protected CustomerDAO customerDAO;
@@ -96,8 +105,8 @@ public class AppointmentController extends MainController implements Initializab
             customers.addAll(this.customerDAO.getCustomers());
 
             this.customerInput.setItems(FXCollections.observableList(customers));
-        } catch (SQLException e) {
-            logger.debug(e);
+        } catch (SQLException ex) {
+            LOGGER.error(ex);
         }
         
         CustomerEntity customerSelected = this.contextService
@@ -149,20 +158,14 @@ public class AppointmentController extends MainController implements Initializab
     }
     
     protected void handleSubmit(MouseEvent event, BooleanSupplier childHandler) {
-        logger.debug("handleSubmit");
+        LOGGER.debug("handleSubmit");
         
-        if (this.titleInput.getText().isEmpty() ||
-            this.descriptionInput.getText().isEmpty() ||
-            this.locationInput.getText().isEmpty() ||
-            this.contactInput.getText().isEmpty() || 
-            this.urlInput.getText().isEmpty() ||
-            this.startInput.getDateTimeValue() == null ||
-            this.endInput.getDateTimeValue() == null) {
-            this.errorMessage.setText("All fields are required");
-        } else {
+        try {
+            this.validate();
+            
             boolean result = childHandler.getAsBoolean();
             
-            logger.debug(result);
+            LOGGER.debug(result);
             
             if (result) {
                 this.titleInput.clear();
@@ -177,6 +180,78 @@ public class AppointmentController extends MainController implements Initializab
                 
                 this.reminderService.scheduleReminders();
             }
+        } catch (InvalidAppointmentException | OverlappingAppointmentException ex) {
+            this.errorMessage.setText(ex.getMessage());
+            
+            LOGGER.warn(ex.getMessage());
         }
+    }
+    
+    private void validate()
+            throws InvalidAppointmentException, OverlappingAppointmentException {
+        int appointmentId = this.contextService
+                .getSelectedAppointment() == null ? -1 :
+                this.contextService.getSelectedAppointment().getAppointmentId();
+        int customerId = this.customerInput.getValue() == null ? null : 
+                this.customerInput.getValue().getCustomerId();
+        
+        String createdBy = this.contextService.getUser().getUserName();
+        
+        LocalDateTime startRaw = this.startInput.getDateTimeValue();
+        LocalDateTime endRaw = this.endInput.getDateTimeValue();
+        
+        try {
+            if (this.isInvalidData()) {
+                throw new InvalidAppointmentException(InvalidAppointmentTypeEnum
+                        .INCOMPLETE);
+            } else if (this.isInvalidTime()) {
+                throw new InvalidAppointmentException(InvalidAppointmentTypeEnum
+                        .INVALID_TIME);
+            } else if (this.isOutsideBusinessHours()) {
+                throw new InvalidAppointmentException(InvalidAppointmentTypeEnum
+                        .OUTSIDE_BUSINESS_HOURS);
+            } else if (this.appointmentDAO.isOverlappingAppointment(
+                    appointmentId, customerId, startRaw, endRaw, createdBy)) {
+                throw new OverlappingAppointmentException();
+            }
+        } catch (SQLException ex) {
+            LOGGER.error(ex.getMessage());
+        }
+    }
+    
+    private boolean isInvalidData() {
+        return (this.customerInput.getValue() == null ||
+            this.titleInput.getText().isEmpty() ||
+            this.descriptionInput.getText().isEmpty() ||
+            this.locationInput.getText().isEmpty() ||
+            this.contactInput.getText().isEmpty() || 
+            this.urlInput.getText().isEmpty() ||
+            this.startInput.getDateTimeValue() == null ||
+            this.endInput.getDateTimeValue() == null);
+    }
+    
+    private boolean isInvalidTime() {
+        return this.startInput.getDateTimeValue()
+                .isAfter(this.endInput.getDateTimeValue());
+    }
+    
+    private boolean isOutsideBusinessHours() {
+        int businessStartHour = Integer
+                .valueOf(this.businessConfig.getProperty("open_hour"));
+        int businessCloseHour = Integer
+                .valueOf(this.businessConfig.getProperty("close_hour"));
+        
+        int appointmentStartHour = this.startInput
+                .getDateTimeValue().getHour();
+        int appointmentCloseHour = this.endInput
+                .getDateTimeValue().getHour();
+        
+        LOGGER.debug(businessStartHour);
+        LOGGER.debug(businessCloseHour);
+        LOGGER.debug(appointmentStartHour);
+        LOGGER.debug(appointmentCloseHour);
+        
+        return appointmentStartHour < businessStartHour
+                || appointmentCloseHour > businessCloseHour;
     }
 }

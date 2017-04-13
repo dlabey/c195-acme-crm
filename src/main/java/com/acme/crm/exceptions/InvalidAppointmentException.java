@@ -1,14 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.acme.crm.exceptions;
 
-/**
- *
- * @author darren
- */
-public class InvalidAppointmentException {
+import com.acme.crm.enums.InvalidAppointmentTypeEnum;
+
+public class InvalidAppointmentException extends Exception {
     
+    private InvalidAppointmentException(String message) {
+        super(message);
+    }
+    
+    public InvalidAppointmentException(InvalidAppointmentTypeEnum type) throws InvalidAppointmentException {
+        switch (type) {
+            case INCOMPLETE:
+                throw new InvalidAppointmentException("All appointment data required");
+            case INVALID_TIME:
+                throw new InvalidAppointmentException("Start cannot come after End");
+            case OUTSIDE_BUSINESS_HOURS:
+                throw new InvalidAppointmentException("Appointment outside business hours");
+        }
+    }
 }

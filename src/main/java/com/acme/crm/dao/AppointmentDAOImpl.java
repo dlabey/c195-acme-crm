@@ -214,4 +214,37 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         
         return appointment;
     }
+    
+    @Override
+    public boolean isOverlappingAppointment(int appointmentId, int customerId,
+            LocalDateTime startRaw, LocalDateTime endRaw, String createdBy)
+            throws SQLException {
+        PreparedStatement ps = this.dbService.getConnection()
+                .prepareStatement("SELECT * FROM `appointment` "
+                        + "WHERE `appointmentId` != ? "
+                        + "AND (`customerId` = ? OR `createdBy` = ?) "
+                        + "AND `start` >= ? AND `end` <= ?");
+        ZonedDateTime start = ZonedDateTime.ofInstant(startRaw,
+                OffsetDateTime.now(ZoneId.systemDefault()).getOffset(),
+                ZoneOffset.UTC);
+        ZonedDateTime end = ZonedDateTime.ofInstant(endRaw,
+                OffsetDateTime.now(ZoneId.systemDefault()).getOffset(),
+                ZoneOffset.UTC);
+        
+        ps.setInt(1, appointmentId);
+        ps.setInt(2, customerId);
+        ps.setString(3, createdBy);
+        ps.setTimestamp(4, Timestamp.valueOf(start.toLocalDateTime()));
+        ps.setTimestamp(5, Timestamp.valueOf(end.toLocalDateTime()));
+        
+        ResultSet rs = ps.executeQuery();
+        
+        boolean overlapping = false;
+        
+        if (rs.next()) {
+            overlapping = true;
+        }
+        
+        return overlapping;
+    }
 }

@@ -4,6 +4,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 
 import com.acme.crm.entities.CustomerEntity;
@@ -11,7 +13,8 @@ import org.apache.logging.log4j.LogManager;
 
 public class EditCustomerController extends CustomerController {
     
-    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(EditCustomerController.class);
+    private static final org.apache.logging.log4j.Logger LOGGER =
+            LogManager.getLogger(EditCustomerController.class);
     
     private CustomerEntity customer;
     
@@ -36,12 +39,20 @@ public class EditCustomerController extends CustomerController {
     
     @FXML
     protected void handleSubmit(MouseEvent event) throws Exception {
-        logger.debug("handleSubmit");
+        LOGGER.debug("handleSubmit");
         
         super.handleSubmit(event, () -> {
-            logger.debug("childHandler");
+            LOGGER.debug("childHandler");
             
             boolean updated = false;
+            
+            Runnable popup = () -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Customer Updated");
+                alert.setHeaderText(null);
+                alert.setContentText("The Customer has successfully been updated.");
+                alert.show();
+            };
             
             try {
                 updated = this.customerService.editCustomer(this.customer.getCustomerId(),
@@ -57,11 +68,15 @@ public class EditCustomerController extends CustomerController {
                     this.contextService.getCustomersTable()
                 );
                 
-                logger.debug(updated);
-            } catch (SQLException e) {
+                LOGGER.debug(updated);
+            } catch (SQLException ex) {
                 errorMessage.setText("Application error");
                 
-                logger.debug(e.getMessage());
+                LOGGER.error(ex.getMessage());
+            }
+            
+            if (updated) {
+                popup.run();
             }
             
             return updated;

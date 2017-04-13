@@ -25,14 +25,17 @@ import com.acme.crm.dao.CountryDAO;
 import com.acme.crm.dao.CustomerDAO;
 import com.acme.crm.entities.CityEntity;
 import com.acme.crm.entities.CountryEntity;
+import com.acme.crm.exceptions.InvalidCustomerException;
 import com.acme.crm.services.ContextService;
 import com.acme.crm.services.CustomerService;
+import javafx.scene.control.Alert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class CustomerController extends MainController implements Initializable {
 
-    private static final Logger logger = LogManager.getLogger(CustomerController.class);
+    private static final Logger LOGGER =
+            LogManager.getLogger(CustomerController.class);
 
     @Inject
     protected ContextService contextService;
@@ -105,8 +108,8 @@ public class CustomerController extends MainController implements Initializable 
             cities.addAll(this.cityDAO.getCities());
 
             this.cityInput.setItems(FXCollections.observableList(cities));
-        } catch (SQLException e) {
-            logger.debug(e);
+        } catch (SQLException ex) {
+            LOGGER.error(ex);
         }
     }
 
@@ -152,38 +155,33 @@ public class CustomerController extends MainController implements Initializable 
 
     @FXML
     private void handleCitySelect(ActionEvent event) {
-        logger.debug("handleCitySelect");
+        LOGGER.debug("handleCitySelect");
         
         CityEntity city = this.cityInput.getValue();
         
         try {
             CountryEntity country = this.countryDAO.getCountryByCountryId(city.getCountryId());
             
-            logger.debug(country.getCountry());
+            LOGGER.debug(country.getCountry());
             
             this.countryInput.setText(country.getCountry());
         } catch (SQLException e) {
             errorMessage.setText("Application error");
             
-            logger.debug(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 
     protected void handleSubmit(MouseEvent event, BooleanSupplier childHandler) {
-        logger.debug("handleSubmit");
+        LOGGER.debug("handleSubmit");
         
-        if (this.nameInput.getText().isEmpty() ||
-            this.addressInput.getText().isEmpty() ||
-            this.cityInput.getValue() == null ||
-            this.postalCodeInput.getText().isEmpty() ||
-            this.phoneInput.getText().isEmpty() ||
-            this.countryInput.getText().isEmpty()) {
-            this.errorMessage.setText("Fields marked with * are required");
-        } else {
+        try {
+            this.validate();
+
             boolean result = childHandler.getAsBoolean();
-            
-            logger.debug(result);
-            
+
+            LOGGER.debug(result);
+
             if (result) {
                 this.nameInput.clear();
                 this.addressInput.clear();
@@ -192,9 +190,28 @@ public class CustomerController extends MainController implements Initializable 
                 this.postalCodeInput.clear();
                 this.phoneInput.clear();
                 this.countryInput.clear();
-                
+
                 ((Node) event.getSource()).getScene().getWindow().hide();
             }
+        } catch (InvalidCustomerException ex) {
+            this.errorMessage.setText(ex.getMessage());
+            
+            LOGGER.warn(ex.getMessage());
         }
+    }
+    
+    private void validate() throws InvalidCustomerException {
+        if (this.isInvalidData()) {
+            throw new InvalidCustomerException();
+        }
+    }
+    
+    private boolean isInvalidData() {
+        return (this.nameInput.getText().isEmpty() ||
+            this.addressInput.getText().isEmpty() ||
+            this.cityInput.getValue() == null ||
+            this.postalCodeInput.getText().isEmpty() ||
+            this.phoneInput.getText().isEmpty() ||
+            this.countryInput.getText().isEmpty());
     }
 }

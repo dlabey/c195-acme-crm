@@ -1,6 +1,7 @@
 package com.acme.crm.controllers;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
 import javafx.fxml.FXML;
@@ -23,16 +24,15 @@ import com.acme.crm.entities.UserEntity;
 import com.acme.crm.exceptions.InvalidUserException;
 import com.acme.crm.services.ContextService;
 import com.acme.crm.services.ReminderService;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class LoginController extends MainController implements Initializable {
 
-    private static final Level level = Level.forName("LOGIN", 401);
+    private static final Level LEVEL = Level.forName("LOGIN", 401);
 
-    private static final Logger logger = LogManager.getLogger(LoginController.class);
+    private static final Logger LOGGER = LogManager.getLogger(LoginController.class);
 
     @Inject
     private FXMLLoader loader;
@@ -81,12 +81,12 @@ public class LoginController extends MainController implements Initializable {
 
     @FXML
     private void handleLogin(InputEvent event) throws Exception {
-        logger.debug("Login");
+        LOGGER.debug("Login");
 
         final String userName = this.usernameInput.getText();
         final String password = this.passwordInput.getText();
 
-        //try {
+        try {
             if (userName.equals("") || password.equals("")) {
                 throw new InvalidUserException();
             }
@@ -109,14 +109,14 @@ public class LoginController extends MainController implements Initializable {
             this.contextService.setManageStage(stage);
             
             this.reminderService.scheduleReminders();
-//        } catch (InvalidUserException e) {
-//            errorMessage.setText("User invalid error");
-//
-//            logger.debug(e.getMessage());
-//        } catch (SQLException e) {
-//            errorMessage.setText("Application error");
-//
-//            logger.debug(e.getMessage());
-//        }
+        } catch (InvalidUserException ex) {
+            errorMessage.setText(ex.getMessage());
+
+            LOGGER.warn(ex.getMessage());
+        } catch (SQLException ex) {
+            errorMessage.setText("Application error");
+
+            LOGGER.error(ex.getMessage());
+        }
     }
 }

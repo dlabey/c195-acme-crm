@@ -17,7 +17,7 @@ import org.apache.logging.log4j.LogManager;
 
 public class CustomerServiceImpl implements CustomerService {
 
-    private static final org.apache.logging.log4j.Logger logger =
+    private static final org.apache.logging.log4j.Logger LOGGER =
             LogManager.getLogger(CustomerServiceImpl.class);
 
     @Inject
@@ -66,14 +66,14 @@ public class CustomerServiceImpl implements CustomerService {
             this.dbService.getConnection().commit();
 
             updated = true;
-        } catch (SQLException e) {
+        } catch (SQLException ex) {
             this.dbService.getConnection().rollback();
 
-            logger.debug(e.getMessage());
+            LOGGER.error(ex.getMessage());
         } finally {
             this.dbService.getConnection().setAutoCommit(true);
 
-            logger.debug(updated);
+            LOGGER.debug(updated);
         }
 
         return updated;
@@ -100,14 +100,14 @@ public class CustomerServiceImpl implements CustomerService {
             this.dbService.getConnection().commit();
 
             deleted = true;
-        } catch (SQLException e) {
+        } catch (SQLException ex) {
             this.dbService.getConnection().rollback();
 
-            logger.debug(e.getMessage());
+            LOGGER.error(ex.getMessage());
         } finally {
             this.dbService.getConnection().setAutoCommit(true);
 
-            logger.debug(deleted);
+            LOGGER.debug(deleted);
         }
 
         return deleted;

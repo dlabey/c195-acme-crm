@@ -2,6 +2,6 @@ package com.acme.crm.exceptions;
 
 public class InvalidUserException extends Exception {
     public InvalidUserException() {
-        super("Invalid user");
+        super("Invalid username and/or password");
     }
 }

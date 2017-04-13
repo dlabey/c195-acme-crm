@@ -28,4 +28,8 @@ public interface AppointmentDAO {
     
     public AppointmentEntity getAppointment(int appointmentId)
             throws SQLException;
+    
+    public boolean isOverlappingAppointment(int appointmentId, int customerId,
+            LocalDateTime startRaw, LocalDateTime endRaw, String createdBy)
+            throws SQLException;
 }

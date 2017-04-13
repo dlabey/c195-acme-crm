@@ -4,13 +4,16 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 
 import org.apache.logging.log4j.LogManager;
 
 public class NewCustomerController extends CustomerController {
     
-    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(NewCustomerController.class);
+    private static final org.apache.logging.log4j.Logger LOGGER =
+            LogManager.getLogger(NewCustomerController.class);
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -21,12 +24,20 @@ public class NewCustomerController extends CustomerController {
     
     @FXML
     protected void handleSubmit(MouseEvent event) throws Exception {
-        logger.debug("handleSubmit");
+        LOGGER.debug("handleSubmit");
         
         super.handleSubmit(event, () -> {
-            logger.debug("childHandler");
+            LOGGER.debug("childHandler");
             
             int customerId = 0;
+            
+            Runnable popup = () -> {
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Customer Created");
+                alert.setHeaderText(null);
+                alert.setContentText("The Customer has successfully been created.");
+                alert.show();
+            };
             
             try {
                 customerId = this.customerService.createCustomer(
@@ -41,14 +52,20 @@ public class NewCustomerController extends CustomerController {
                     this.contextService.getCustomersTable()
                 );
                 
-                logger.debug(customerId);
-            } catch (SQLException e) {
+                LOGGER.debug(customerId);
+            } catch (SQLException ex) {
                 errorMessage.setText("Application error");
 
-                logger.debug(e.getMessage());
+                LOGGER.error(ex.getMessage());
             }
             
-            return customerId > 0;
+            boolean created = customerId > 0;
+            
+            if (created) {
+                popup.run();
+            }
+            
+            return created;
         });
     }
 }

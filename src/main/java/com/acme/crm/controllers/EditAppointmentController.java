@@ -4,6 +4,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 
 import com.acme.crm.entities.AppointmentEntity;
@@ -11,7 +13,7 @@ import org.apache.logging.log4j.LogManager;
 
 public class EditAppointmentController extends AppointmentController {
 
-    private static final org.apache.logging.log4j.Logger logger
+    private static final org.apache.logging.log4j.Logger LOGGER
             = LogManager.getLogger(EditAppointmentController.class);
 
     private AppointmentEntity appointment;
@@ -39,12 +41,20 @@ public class EditAppointmentController extends AppointmentController {
 
     @FXML
     protected void handleSubmit(MouseEvent event) throws Exception {
-        logger.debug("handleSubmit");
+        LOGGER.debug("handleSubmit");
 
         super.handleSubmit(event, () -> {
-            logger.debug("childHandler");
+            LOGGER.debug("childHandler");
 
             boolean updated = false;
+            
+            Runnable popup = () -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Appointment Updated");
+                alert.setHeaderText(null);
+                alert.setContentText("The Appointment has successfully been updated.");
+                alert.show();
+            };
 
             try {
                 this.appointmentService.editAppointment(
@@ -65,14 +75,18 @@ public class EditAppointmentController extends AppointmentController {
                         this.contextService.getAppointmentsTable()
                 );
 
-                logger.debug(updated);
+                LOGGER.debug(updated);
 
                 this.reminderService
                         .cancelReminder(this.appointment.getAppointmentId());
-            } catch (SQLException e) {
+            } catch (SQLException ex) {
                 errorMessage.setText("Application error");
 
-                logger.debug(e.getMessage());
+                LOGGER.error(ex.getMessage());
+            }
+            
+            if (updated) {
+                popup.run();
             }
 
             return updated;
