@@ -2,6 +2,8 @@ package com.acme.crm.services;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.TreeTableView;
 
 public interface AppointmentService {
@@ -20,4 +22,6 @@ public interface AppointmentService {
     
     public void loadAppointments(TreeTableView appointmentsTable)
             throws SQLException;
+    
+    public List<XYChart.Series> loadAppointmenTypesByMonth() throws SQLException;
 }

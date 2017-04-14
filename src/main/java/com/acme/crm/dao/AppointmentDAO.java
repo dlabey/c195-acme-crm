@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.acme.crm.entities.AppointmentEntity;
+import com.acme.crm.entities.AppointmentTypeByMonthEntity;
 
 public interface AppointmentDAO {
     
@@ -32,4 +33,7 @@ public interface AppointmentDAO {
     public boolean isOverlappingAppointment(int appointmentId, int customerId,
             LocalDateTime startRaw, LocalDateTime endRaw, String createdBy)
             throws SQLException;
+    
+    public List<AppointmentTypeByMonthEntity>
+        getAppointmentTypesByMonth(String offset) throws SQLException;
 }

@@ -1,5 +1,6 @@
 package com.acme.crm.controllers;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -14,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TreeItem;
@@ -36,7 +38,6 @@ import com.acme.crm.services.AppointmentService;
 import com.acme.crm.services.ContextService;
 import com.acme.crm.services.CustomerService;
 import com.acme.crm.services.DateTimeService;
-import javafx.scene.control.Alert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -151,6 +152,8 @@ public class ManageController extends MainController implements Initializable {
     
     private AppointmentEntity appointmentSelected;
     
+    private Stage appointmentTypesByMonthStage;
+    
     private Stage newCustomerStage;
     
     private Stage editCustomerStage;
@@ -169,9 +172,45 @@ public class ManageController extends MainController implements Initializable {
         this.contextService.setCustomersTable(this.customersTable);
         this.contextService.setAppointmentsTable(this.appointmentsTable);
     }
+    
+    @FXML
+    private void handleAppointmentTypesByMonthReport(ActionEvent event)
+            throws IOException {
+        LOGGER.debug("handleAppointmentTypesByMonthClick");
+        
+        if (appointmentTypesByMonthStage == null) {
+            FXMLLoader loader = this.loader.get();
+        
+            loader.setLocation(getClass()
+                    .getResource("/ui/AppointmentTypesByMonth.fxml"));
+
+            Parent root = loader.load();
+            
+            appointmentTypesByMonthStage = new Stage();
+
+            appointmentTypesByMonthStage.setTitle("Report");
+            appointmentTypesByMonthStage.setScene(new Scene(root));
+        }
+        
+        appointmentTypesByMonthStage.show();
+    }
+    
+    @FXML
+    private void handleConsultantSchedulesReport(ActionEvent event) {
+        LOGGER.debug("handleConsultantSchedulesReport");
+        
+        
+    }
+    
+    @FXML
+    private void handleCustomerSchedulesReport(ActionEvent event) {
+        LOGGER.debug("handleConsultantSchedulesReport");
+        
+        
+    }
 
     @FXML
-    private void handleCustomerDeselect(MouseEvent event) throws Exception {
+    private void handleCustomerDeselect(MouseEvent event) {
         LOGGER.debug("handleCustomerDeselect");
         
         this.customerSelected = null;
@@ -181,7 +220,7 @@ public class ManageController extends MainController implements Initializable {
     }
 
     @FXML
-    private void handleNewCustomerLink(MouseEvent event) throws Exception {
+    private void handleNewCustomerLink(MouseEvent event) throws IOException {
         LOGGER.debug("handleNewCustomerLink");
        
         if (newCustomerStage == null) {
@@ -202,7 +241,7 @@ public class ManageController extends MainController implements Initializable {
     }
     
     @FXML
-    private void handleDeleteCustomerLink(MouseEvent event) throws Exception {
+    private void handleDeleteCustomerLink(MouseEvent event) {
         LOGGER.debug("handleDeleteCustomerLink");
         
         if (!this.customerDeleteLink.isDisabled() && this.customerSelected != null) {
@@ -237,7 +276,7 @@ public class ManageController extends MainController implements Initializable {
     }
 
     @FXML
-    private void handleNewAppointmentLink(MouseEvent event) throws Exception {
+    private void handleNewAppointmentLink(MouseEvent event) throws IOException {
         LOGGER.debug("handleNewAppointmentLink");
        
         if (newAppointmentStage == null) {
@@ -253,12 +292,11 @@ public class ManageController extends MainController implements Initializable {
             newAppointmentStage.setTitle("New Appointment");
             newAppointmentStage.setScene(new Scene(root));
         }
-        
         newAppointmentStage.show();
     }
     
     @FXML
-    private void handleEditAppointmentLink(MouseEvent event) throws Exception {
+    private void handleEditAppointmentLink(MouseEvent event) throws IOException {
         LOGGER.debug("handleEditAppointmentLink");
         
         if (!this.appointmentEditLink.isDisabled() &&
@@ -285,7 +323,7 @@ public class ManageController extends MainController implements Initializable {
     }
     
     @FXML
-    private void handleDeleteAppointmentLink(MouseEvent event) throws Exception {
+    private void handleDeleteAppointmentLink(MouseEvent event) {
         LOGGER.debug("handleDeleteAppointmentLink");
         
         if (!this.appointmentDeleteLink.isDisabled() &&

@@ -28,7 +28,6 @@ import com.acme.crm.entities.CountryEntity;
 import com.acme.crm.exceptions.InvalidCustomerException;
 import com.acme.crm.services.ContextService;
 import com.acme.crm.services.CustomerService;
-import javafx.scene.control.Alert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

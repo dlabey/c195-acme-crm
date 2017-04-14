@@ -1,26 +1,32 @@
 package com.acme.crm.services;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 import java.util.stream.Collectors;
+import java.util.TreeSet;
 import javax.inject.Inject;
 import javafx.collections.FXCollections;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
 
-import java.time.LocalDateTime;
-
 import com.acme.crm.dao.AppointmentDAO;
 import com.acme.crm.dao.ReminderDAO;
 import com.acme.crm.entities.AppointmentEntity;
+import com.acme.crm.entities.AppointmentTypeByMonthEntity;
 import com.acme.crm.entities.MonthEntity;
 import com.acme.crm.entities.WeekEntity;
 import com.acme.crm.entities.YearEntity;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import org.apache.logging.log4j.LogManager;
 
 public class AppointmentServiceImpl implements AppointmentService {
@@ -212,5 +218,44 @@ public class AppointmentServiceImpl implements AppointmentService {
             appointmentsTable.getRoot().getChildren().clear();
             appointmentsTable.setPlaceholder(new Label("No appointments"));
         }
+    }
+    
+    @Override
+    public List<XYChart.Series> loadAppointmenTypesByMonth() throws SQLException {
+        LOGGER.debug("loadAppointmenTypesByMonth");
+        
+        String offset = OffsetDateTime.now(ZoneId.systemDefault()).getOffset()
+                .toString();
+        
+        LOGGER.debug(offset);
+        
+        List<AppointmentTypeByMonthEntity> appointmenTypesByMonth = 
+                this.appointmentDAO.getAppointmentTypesByMonth(offset);
+        
+        SortedSet<String> types = new TreeSet<>();
+        
+        appointmenTypesByMonth.forEach(t -> types.add(t.getType()));
+        
+        List<XYChart.Series> seriesList = new LinkedList<>();
+        
+        types.forEach(t -> {
+            XYChart.Series series = new XYChart.Series();
+            
+            series.setName(String.valueOf(t)); // TODO i18n
+            
+            List<AppointmentTypeByMonthEntity> data =
+                    appointmenTypesByMonth.stream()
+                            .filter(d -> d.getType().equals(t))
+                            .collect(Collectors.toList());
+            
+            data.forEach(d -> {
+                series.getData()
+                        .add(new XYChart.Data(String.valueOf(d.getMonth()), d.getCount()));
+            });
+            
+            seriesList.add(series);
+        });
+        
+        return seriesList;
     }
 }

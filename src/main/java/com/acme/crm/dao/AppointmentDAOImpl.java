@@ -15,6 +15,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.acme.crm.entities.AppointmentEntity;
+import com.acme.crm.entities.AppointmentTypeByMonthEntity;
 import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.services.DatabaseService;
 
@@ -246,5 +247,40 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         }
         
         return overlapping;
+    }
+    
+    @Override
+    public List<AppointmentTypeByMonthEntity>
+        getAppointmentTypesByMonth(String offset) throws SQLException {
+        PreparedStatement ps = this.dbService.getConnection()
+                .prepareStatement("SELECT "
+                        + "MONTH(CONVERT_TZ(`a`.`start`, '+00:00', ?)) AS `month`, "
+                        + "`ci`.`city` AS `type`, "
+                        + "COUNT(TRUE) AS `count` "
+                        + "FROM `appointment` `a` "
+                        + "JOIN `customer` `c` ON `c`.`customerId` = `a`.`customerId` "
+                        + "JOIN `address` `ad` ON `ad`.`addressId` = `c`.`addressId` "
+                        + "JOIN `city` `ci` ON `ci`.`cityId` = `ad`.`cityId` "
+                        + "GROUP BY `month`, `type` "
+                        + "ORDER BY `month`, `count`");
+        
+        ps.setString(1, offset);
+        
+        ResultSet rs = ps.executeQuery();
+
+        List<AppointmentTypeByMonthEntity> appointmentTypesByMonth =
+                new LinkedList<>();
+
+        while (rs.next()) {
+            AppointmentTypeByMonthEntity appointmentTypeByMonth = 
+                new AppointmentTypeByMonthEntity();
+            appointmentTypeByMonth.setMonth(rs.getInt("month"));
+            appointmentTypeByMonth.setType(rs.getString("type"));
+            appointmentTypeByMonth.setCount(rs.getInt("count"));
+            
+            appointmentTypesByMonth.add(appointmentTypeByMonth);
+        }
+        
+        return appointmentTypesByMonth;
     }
 }
