@@ -173,6 +173,100 @@ public class AppointmentDAOImpl implements AppointmentDAO {
     }
     
     @Override
+    public List<AppointmentEntity> getAppointmentScheduleByUserName(
+        String userName) throws SQLException {
+        PreparedStatement ps = this.dbService.getConnection()
+                .prepareStatement("SELECT * FROM `appointment` `a` "
+                        + "JOIN `customer` `c` ON `c`.`customerId` = `a`.`customerId` "
+                        + "WHERE `a`.`createdBy` = COALESCE(?, `a`.`createdBy`) "
+                        + "ORDER BY `a`.`start`, `a`.`end`");
+
+        ps.setString(1, userName);
+
+        ResultSet rs = ps.executeQuery();
+
+        List<AppointmentEntity> appointments = new LinkedList<>();
+
+        while (rs.next()) {
+            CustomerEntity customer = new CustomerEntity();
+            customer.setCustomerId(rs.getInt("c.customerId"));
+            customer.setCustomerName(rs.getString("c.customerName"));
+            customer.setAddressId(rs.getInt("c.addressId"));
+            customer.setActive(rs.getBoolean("c.active"));
+            customer.setCreateDate(rs.getTimestamp("c.createDate"));
+            customer.setCreatedBy(rs.getString("c.createdBy"));
+            customer.setLastUpdate(rs.getTimestamp("c.lastUpdate"));
+            customer.setLastUpdatedBy(rs.getString("c.lastUpdateBy"));
+
+            AppointmentEntity appointment = new AppointmentEntity();
+            appointment.setAppointmentId(rs.getInt("a.appointmentId"));
+            appointment.setCustomer(customer);
+            appointment.setTitle(rs.getString("a.title"));
+            appointment.setDescription(rs.getString("a.description"));
+            appointment.setLocation(rs.getString("a.location"));
+            appointment.setContact(rs.getString("a.contact"));
+            appointment.setUrl(rs.getString("a.url"));
+            appointment.setStart(rs.getTimestamp("a.start"));
+            appointment.setEnd(rs.getTimestamp("a.end"));
+            appointment.setCreateDate(rs.getTimestamp("c.createDate"));
+            appointment.setCreatedBy(rs.getString("c.createdBy"));
+            appointment.setLastUpdate(rs.getTimestamp("c.lastUpdate"));
+            appointment.setLastUpdatedBy(rs.getString("c.lastUpdateBy"));
+
+            appointments.add(appointment);
+        }
+
+        return appointments;
+    }
+    
+    @Override
+    public List<AppointmentEntity> getAppointmentScheduleByCustomerId(
+        String customerId) throws SQLException {
+        PreparedStatement ps = this.dbService.getConnection()
+                .prepareStatement("SELECT * FROM `appointment` `a` "
+                        + "JOIN `customer` `c` ON `c`.`customerId` = `a`.`customerId` "
+                        + "WHERE `a`.`customerId` = COALESCE(?, `a`.`customerId`) "
+                        + "ORDER BY `a`.`start`, `a`.`end`");
+        
+        ps.setString(1, customerId);
+
+        ResultSet rs = ps.executeQuery();
+
+        List<AppointmentEntity> appointments = new LinkedList<>();
+
+        while (rs.next()) {
+            CustomerEntity customer = new CustomerEntity();
+            customer.setCustomerId(rs.getInt("c.customerId"));
+            customer.setCustomerName(rs.getString("c.customerName"));
+            customer.setAddressId(rs.getInt("c.addressId"));
+            customer.setActive(rs.getBoolean("c.active"));
+            customer.setCreateDate(rs.getTimestamp("c.createDate"));
+            customer.setCreatedBy(rs.getString("c.createdBy"));
+            customer.setLastUpdate(rs.getTimestamp("c.lastUpdate"));
+            customer.setLastUpdatedBy(rs.getString("c.lastUpdateBy"));
+
+            AppointmentEntity appointment = new AppointmentEntity();
+            appointment.setAppointmentId(rs.getInt("a.appointmentId"));
+            appointment.setCustomer(customer);
+            appointment.setTitle(rs.getString("a.title"));
+            appointment.setDescription(rs.getString("a.description"));
+            appointment.setLocation(rs.getString("a.location"));
+            appointment.setContact(rs.getString("a.contact"));
+            appointment.setUrl(rs.getString("a.url"));
+            appointment.setStart(rs.getTimestamp("a.start"));
+            appointment.setEnd(rs.getTimestamp("a.end"));
+            appointment.setCreateDate(rs.getTimestamp("c.createDate"));
+            appointment.setCreatedBy(rs.getString("c.createdBy"));
+            appointment.setLastUpdate(rs.getTimestamp("c.lastUpdate"));
+            appointment.setLastUpdatedBy(rs.getString("c.lastUpdateBy"));
+
+            appointments.add(appointment);
+        }
+
+        return appointments;
+    }
+    
+    @Override
     public AppointmentEntity getAppointment(int appointmentId)
             throws SQLException {
         PreparedStatement ps = this.dbService.getConnection()

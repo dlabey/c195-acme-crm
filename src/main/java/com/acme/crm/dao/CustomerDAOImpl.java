@@ -1,6 +1,7 @@
 package com.acme.crm.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -15,7 +16,6 @@ import com.acme.crm.entities.CityEntity;
 import com.acme.crm.entities.CountryEntity;
 import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.services.DatabaseService;
-import java.sql.ResultSet;
 
 public class CustomerDAOImpl implements CustomerDAO {
     
@@ -91,7 +91,8 @@ public class CustomerDAOImpl implements CustomerDAO {
         ResultSet rs = stmnt.executeQuery("SELECT * FROM `customer` `c` "
                 + "JOIN `address` `a` ON `a`.`addressId` = `c`.`addressId` "
                 + "JOIN `city` `ci` ON `ci`.`cityId` = `a`.`cityId` "
-                + "JOIN `country` `co` ON `co`.`countryId` = `ci`.`countryId`");
+                + "JOIN `country` `co` ON `co`.`countryId` = `ci`.`countryId` "
+                + "ORDER BY `c`.`customerName`");
         
         List<CustomerEntity> customers = new LinkedList<>();
         

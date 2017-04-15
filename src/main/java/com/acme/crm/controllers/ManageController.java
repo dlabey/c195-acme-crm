@@ -62,6 +62,12 @@ public class ManageController extends MainController implements Initializable {
     private Provider<FXMLLoader> loader;
     
     @Inject
+    private Provider<ConsultantScheduleController> consultantScheduleController;
+    
+    @Inject
+    private Provider<CustomerScheduleController> customerScheduleController;
+    
+    @Inject
     private Provider<NewCustomerController> newCustomerController;
     
     @Inject
@@ -154,6 +160,10 @@ public class ManageController extends MainController implements Initializable {
     
     private Stage appointmentTypesByMonthStage;
     
+    private Stage consultantSchedulesStage;
+    
+    private Stage customerSchedulesStage;
+    
     private Stage newCustomerStage;
     
     private Stage editCustomerStage;
@@ -196,17 +206,49 @@ public class ManageController extends MainController implements Initializable {
     }
     
     @FXML
-    private void handleConsultantSchedulesReport(ActionEvent event) {
+    private void handleConsultantSchedulesReport(ActionEvent event)
+        throws IOException {
         LOGGER.debug("handleConsultantSchedulesReport");
         
+        if (consultantSchedulesStage == null) {
+            FXMLLoader loader = this.loader.get();
         
+            loader.setLocation(getClass()
+                    .getResource("/ui/Schedules.fxml"));
+            loader.setController(consultantScheduleController.get());
+
+            Parent root = loader.load();
+            
+            consultantSchedulesStage = new Stage();
+
+            consultantSchedulesStage.setTitle("Report");
+            consultantSchedulesStage.setScene(new Scene(root));
+        }
+        
+        consultantSchedulesStage.show();
     }
     
     @FXML
-    private void handleCustomerSchedulesReport(ActionEvent event) {
+    private void handleCustomerSchedulesReport(ActionEvent event)
+        throws Exception {
         LOGGER.debug("handleConsultantSchedulesReport");
         
+        if (customerSchedulesStage == null) {
+            FXMLLoader loader = this.loader.get();
         
+            loader.setLocation(getClass()
+                    .getResource("/ui/Schedules.fxml"));
+            loader.setController(customerScheduleController.get());
+
+            Parent root = loader.load();
+            
+            customerSchedulesStage = new Stage();
+
+            customerSchedulesStage.setTitle("Report");
+            customerSchedulesStage.setScene(new Scene(root));
+        }
+        
+        customerSchedulesStage.show();
     }
 
     @FXML

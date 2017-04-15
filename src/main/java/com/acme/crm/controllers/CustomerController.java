@@ -31,7 +31,7 @@ import com.acme.crm.services.CustomerService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class CustomerController extends MainController implements Initializable {
+public abstract class CustomerController extends MainController implements Initializable {
 
     private static final Logger LOGGER =
             LogManager.getLogger(CustomerController.class);
@@ -86,6 +86,8 @@ public class CustomerController extends MainController implements Initializable 
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        super.initialize(url, rb);
+        
         this.errorMessage.setText("");
 
         this.cityInput.setConverter(new StringConverter<CityEntity>() {
@@ -108,7 +110,7 @@ public class CustomerController extends MainController implements Initializable 
 
             this.cityInput.setItems(FXCollections.observableList(cities));
         } catch (SQLException ex) {
-            LOGGER.error(ex);
+            LOGGER.error(ex.getMessage());
         }
     }
 

@@ -30,6 +30,8 @@ public class AppointmentTypesByMonthController extends MainController
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        super.initialize(url, rb);
+        
         this.appointmentTypesStackBarChart.getXAxis().setLabel("Month");
         this.appointmentTypesStackBarChart.getYAxis().setLabel("Count");
         

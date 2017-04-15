@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TreeTableView;
 
 public interface AppointmentService {
@@ -22,6 +23,12 @@ public interface AppointmentService {
     
     public void loadAppointments(TreeTableView appointmentsTable)
             throws SQLException;
+    
+    public void loadAppointmentScheduleByUserName(TableView scheduleTable,
+            String userName) throws SQLException;
+    
+    public void loadAppointmentScheduleByCustomerId(TableView scheduleTable,
+            String customerId) throws SQLException;
     
     public List<XYChart.Series> loadAppointmenTypesByMonth() throws SQLException;
 }

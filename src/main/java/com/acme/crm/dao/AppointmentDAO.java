@@ -27,6 +27,13 @@ public interface AppointmentDAO {
     public List<AppointmentEntity> getAppointments(Timestamp start,
             Timestamp end) throws SQLException;
     
+    public List<AppointmentEntity> getAppointmentScheduleByUserName(
+        String userName) throws SQLException;
+    
+    // customerId is String so it can be nullable
+    public List<AppointmentEntity> getAppointmentScheduleByCustomerId(
+        String customerId) throws SQLException;
+    
     public AppointmentEntity getAppointment(int appointmentId)
             throws SQLException;
     

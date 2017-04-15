@@ -27,12 +27,12 @@ import com.acme.crm.exceptions.OverlappingAppointmentException;
 import com.acme.crm.services.AppointmentService;
 import com.acme.crm.services.ContextService;
 import com.acme.crm.services.ReminderService;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tornadofx.control.DateTimePicker;
 
-public class AppointmentController extends MainController implements Initializable {
+public abstract class AppointmentController extends MainController
+        implements Initializable {
     
     private static final Logger LOGGER =
             LogManager.getLogger(AppointmentController.class);
@@ -84,6 +84,8 @@ public class AppointmentController extends MainController implements Initializab
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        super.initialize(url, rb);
+        
         this.errorMessage.setText("");
         
         this.customerInput.setConverter(new StringConverter<CustomerEntity>() {

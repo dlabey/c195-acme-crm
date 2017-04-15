@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <HBox prefHeight="29.0" prefWidth="600.0">
+            <children>
+                <MenuBar>
+                    <menus>
+                        <Menu mnemonicParsing="false" text="File">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="Quit" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Help">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="About" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+                <MenuBar prefHeight="29.0" prefWidth="346.0" HBox.hgrow="ALWAYS">
+                    <menus>
+                        <Menu disable="true" mnemonicParsing="false" />
+                    </menus>
+                </MenuBar>
+                <MenuBar>
+                    <menus>
+                        <Menu mnemonicParsing="false" text="Language">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="English" />
+                                <MenuItem mnemonicParsing="false" text="Español" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+            </children>
+        </HBox>
+      <TitledPane fx:id="titlePane" animated="false" collapsible="false" layoutX="199.0" layoutY="146.0" text="Schedules" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <HBox prefHeight="36.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label fx:id="filterLabel" prefHeight="27.0" text="Filter:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <ComboBox fx:id="filterInput" onAction="#handleFilterSelect" prefWidth="150.0" />
+                     </children>
+                  </HBox>
+                  <TableView fx:id="scheduleTable" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="36.0">
+                    <columns>
+                      <TableColumn fx:id="column1Col" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Column 1" />
+                      <TableColumn fx:id="column2Col" maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Column 2" />
+                        <TableColumn fx:id="locationCol" prefWidth="116.0" text="Location" />
+                        <TableColumn fx:id="startCol" maxWidth="1.7976931348623157E308" prefWidth="120.0" text="Start" />
+                        <TableColumn fx:id="endCol" maxWidth="1.7976931348623157E308" prefWidth="120.0" text="End" />
+                    </columns>
+                  </TableView>
+               </children>
+            </AnchorPane>
+        </content>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </TitledPane>
+    </children>
+</AnchorPane>

@@ -27,6 +27,7 @@ import com.acme.crm.entities.AppointmentTypeByMonthEntity;
 import com.acme.crm.entities.MonthEntity;
 import com.acme.crm.entities.WeekEntity;
 import com.acme.crm.entities.YearEntity;
+import javafx.scene.control.TableView;
 import org.apache.logging.log4j.LogManager;
 
 public class AppointmentServiceImpl implements AppointmentService {
@@ -217,6 +218,37 @@ public class AppointmentServiceImpl implements AppointmentService {
         } else {
             appointmentsTable.getRoot().getChildren().clear();
             appointmentsTable.setPlaceholder(new Label("No appointments"));
+        }
+    }
+    
+    @Override
+    public void loadAppointmentScheduleByUserName(TableView scheduleTable,
+            String userName) throws SQLException {
+        List<AppointmentEntity> appointments
+                = this.appointmentDAO.getAppointmentScheduleByUserName(userName);
+        
+        if (appointments.size() > 0) {
+            scheduleTable.getItems().setAll(
+                FXCollections.observableList(appointments));
+        } else {
+            scheduleTable.getItems().clear();
+            scheduleTable.setPlaceholder(new Label("No schedule"));
+        }
+    }
+    
+    @Override
+    public void loadAppointmentScheduleByCustomerId(TableView scheduleTable,
+            String customerId) throws SQLException {
+        List<AppointmentEntity> appointments
+                = this.appointmentDAO
+                        .getAppointmentScheduleByCustomerId(customerId);
+        
+        if (appointments.size() > 0) {
+            scheduleTable.getItems().setAll(
+                FXCollections.observableList(appointments));
+        } else {
+            scheduleTable.getItems().clear();
+            scheduleTable.setPlaceholder(new Label("No schedule"));
         }
     }
     
