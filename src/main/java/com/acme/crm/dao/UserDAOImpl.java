@@ -10,11 +10,13 @@ import javax.inject.Inject;
 
 import com.acme.crm.entities.UserEntity;
 import com.acme.crm.exceptions.InvalidUserException;
+import com.acme.crm.services.ContextService;
 import com.acme.crm.services.DatabaseService;
 
-
-
 public class UserDAOImpl implements UserDAO {
+    
+    @Inject
+    private ContextService contextService;
     
     @Inject
     private DatabaseService dbService;
@@ -41,7 +43,7 @@ public class UserDAOImpl implements UserDAO {
             user.setLastUpdate(rs.getTimestamp("lastUpdate"));
             user.setLastUpdatedBy(rs.getString("lastUpdatedBy"));
         } else {
-            throw new InvalidUserException();
+            throw new InvalidUserException(contextService);
         }
         
         return user;

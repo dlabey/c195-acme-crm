@@ -12,10 +12,13 @@ import com.acme.crm.entities.MonthEntity;
 import com.acme.crm.entities.UserEntity;
 import com.acme.crm.entities.WeekEntity;
 import com.acme.crm.entities.YearEntity;
+import java.util.Locale;
 
 
 @Singleton
 public class ContextServiceImpl implements ContextService {
+    
+    private Locale locale;
     
     private UserEntity user;
     
@@ -33,6 +36,18 @@ public class ContextServiceImpl implements ContextService {
     
     public ContextServiceImpl() {
         this.appointmentsTableFilters = new HashMap<>();
+    }
+    
+    @Override
+    public Locale getLocale() {
+        return this.locale == null ? Locale.getDefault() : this.locale;
+    }
+    
+    @Override
+    public Locale setLocale(Locale locale) {
+        this.locale = locale;
+        
+        return this.locale;
     }
     
     @Override

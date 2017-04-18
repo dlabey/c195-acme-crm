@@ -1,5 +1,6 @@
 package com.acme.crm.services;
 
+import java.util.Locale;
 import java.util.Map;
 import javafx.scene.control.TreeTableView;
 import javafx.stage.Stage;
@@ -12,6 +13,10 @@ import com.acme.crm.entities.WeekEntity;
 import com.acme.crm.entities.YearEntity;
 
 public interface ContextService {
+    
+    public Locale getLocale();
+    
+    public Locale setLocale(Locale locale);
     
     public UserEntity getUser();
     

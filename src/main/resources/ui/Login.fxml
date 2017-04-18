@@ -47,18 +47,18 @@
             <children>
             <TextFlow textAlignment="CENTER">
                <children>
-                      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Login">
+                      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%Login">
                           <font>
                               <Font name="System Bold" size="18.0" />
                           </font>
                       </Text>
                </children>
             </TextFlow>
-                <Label onMouseClicked="#handleUsernameLabelClick" text="Username" />
+                <Label onMouseClicked="#handleUsernameLabelClick" text="%Username" />
                 <TextField fx:id="usernameInput" />
-                <Label onMouseClicked="#handlePasswordLabelClick" text="Password" />
+                <Label onMouseClicked="#handlePasswordLabelClick" text="%Password" />
                 <PasswordField fx:id="passwordInput" />
-                <Button mnemonicParsing="false" onMouseClicked="#handleLogin" text="Login">
+                <Button mnemonicParsing="false" onMouseClicked="#handleLogin" text="%Login">
                     <VBox.margin>
                         <Insets top="5.0" />
                     </VBox.margin>

@@ -32,7 +32,8 @@ public class LoginController extends MainController implements Initializable {
 
     private static final Level LEVEL = Level.forName("LOGIN", 401);
 
-    private static final Logger LOGGER = LogManager.getLogger(LoginController.class);
+    private static final Logger LOGGER =
+            LogManager.getLogger(LoginController.class);
 
     @Inject
     private FXMLLoader loader;
@@ -54,10 +55,14 @@ public class LoginController extends MainController implements Initializable {
 
     @FXML
     private Text errorMessage;
+    
+    private ResourceBundle rb;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         super.initialize(url, rb);
+        
+        this.rb = rb;
         
         this.errorMessage.setText("");
     }
@@ -88,7 +93,7 @@ public class LoginController extends MainController implements Initializable {
 
         try {
             if (userName.equals("") || password.equals("")) {
-                throw new InvalidUserException();
+                throw new InvalidUserException(this.contextService);
             }
 
             UserEntity user = this.userDAO.getUserByUserNameAndPassword(userName, password);
@@ -114,7 +119,7 @@ public class LoginController extends MainController implements Initializable {
 
             LOGGER.warn(ex.getMessage());
         } catch (SQLException ex) {
-            errorMessage.setText("Application error");
+            errorMessage.setText(this.rb.getString("Application_error"));
 
             LOGGER.error(ex.getMessage());
         }
