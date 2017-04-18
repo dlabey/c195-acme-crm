@@ -24,13 +24,19 @@ import com.acme.crm.entities.UserEntity;
 import com.acme.crm.exceptions.InvalidUserException;
 import com.acme.crm.services.ContextService;
 import com.acme.crm.services.ReminderService;
-import org.apache.logging.log4j.Level;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class LoginController extends MainController implements Initializable {
-
-    private static final Level LEVEL = Level.forName("LOGIN", 401);
 
     private static final Logger LOGGER =
             LogManager.getLogger(LoginController.class);
@@ -106,6 +112,10 @@ public class LoginController extends MainController implements Initializable {
             
             ((Node) event.getSource()).getScene().getWindow().hide();
             
+            LOGGER.debug(userName);
+            
+            this.auditUsername(userName);
+            
             Stage stage = new Stage();
             stage.setTitle("Manage");
             stage.setScene(new Scene(root));
@@ -121,6 +131,24 @@ public class LoginController extends MainController implements Initializable {
         } catch (SQLException ex) {
             errorMessage.setText(this.rb.getString("Application_error"));
 
+            LOGGER.error(ex.getMessage());
+        }
+    }
+    
+    private void auditUsername(String userName) {
+        Path log = Paths.get("logins.txt");
+
+        DateTimeFormatter formatter = DateTimeFormatter
+                .ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+
+        String line = String.format("%s - %s%n",
+                LocalDateTime.now(ZoneOffset.UTC).format(formatter),
+                userName);
+
+        try {
+            Files.write(log, line.getBytes(), StandardOpenOption.APPEND,
+                    StandardOpenOption.CREATE);
+        } catch (IOException ex) {
             LOGGER.error(ex.getMessage());
         }
     }
