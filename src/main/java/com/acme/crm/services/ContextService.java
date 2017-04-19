@@ -14,6 +14,10 @@ import com.acme.crm.entities.YearEntity;
 
 public interface ContextService {
     
+    public Stage getLoginStage();
+    
+    public Stage setLoginStage(Stage loginStage);
+    
     public Locale getLocale();
     
     public Locale setLocale(Locale locale);
@@ -21,10 +25,6 @@ public interface ContextService {
     public UserEntity getUser();
     
     public UserEntity setUser(UserEntity user);
-    
-    public Stage getManageStage();
-    
-    public Stage setManageStage(Stage manageStage);
     
     public TreeTableView getCustomersTable();
     

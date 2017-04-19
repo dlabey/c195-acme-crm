@@ -99,24 +99,6 @@ public abstract class AppointmentController extends MainController
                 return null;
             }
         });
-
-        try {
-            List<CustomerEntity> customers = new LinkedList<>();
-            
-            customers.add(null);
-            customers.addAll(this.customerDAO.getCustomers());
-
-            this.customerInput.setItems(FXCollections.observableList(customers));
-        } catch (SQLException ex) {
-            LOGGER.error(ex);
-        }
-        
-        CustomerEntity customerSelected = this.contextService
-                .getSelectedCustomer();
-        
-        if (customerSelected != null) {
-            this.customerInput.getSelectionModel().select(customerSelected);
-        }
     }
     
     @FXML
@@ -255,5 +237,25 @@ public abstract class AppointmentController extends MainController
         
         return appointmentStartHour < businessStartHour
                 || appointmentCloseHour > businessCloseHour;
+    }
+    
+    public void populateCustomers() {
+        try {
+            List<CustomerEntity> customers = new LinkedList<>();
+            
+            customers.add(null);
+            customers.addAll(this.customerDAO.getCustomers());
+
+            this.customerInput.setItems(FXCollections.observableList(customers));
+        } catch (SQLException ex) {
+            LOGGER.error(ex);
+        }
+        
+        CustomerEntity customerSelected = this.contextService
+                .getSelectedCustomer();
+        
+        if (customerSelected != null) {
+            this.customerInput.getSelectionModel().select(customerSelected);
+        }
     }
 }

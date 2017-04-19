@@ -114,6 +114,19 @@ public class AppointmentDAOImpl implements AppointmentDAO {
     }
     
     @Override
+    public PreparedStatement deleteAppointmentsByCustomerId(int customerId)
+            throws SQLException {
+        PreparedStatement ps = this.dbService.getConnection()
+                .prepareStatement("DELETE `a`, `r` FROM `appointment` `a` "
+                        + "JOIN `reminder` `r` ON `r`.`appointmentId` = `a`.`appointmentId`"
+                        + "WHERE `a`.`customerId` = ?");
+        
+        ps.setInt(1, customerId);
+        
+        return ps;
+    }
+    
+    @Override
     public List<AppointmentEntity> getAppointments(Timestamp start,
             Timestamp end) throws SQLException {
         PreparedStatement ps = this.dbService.getConnection()

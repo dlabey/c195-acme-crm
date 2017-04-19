@@ -18,6 +18,8 @@ import java.util.Locale;
 @Singleton
 public class ContextServiceImpl implements ContextService {
     
+    private Stage loginStage;
+    
     private Locale locale;
     
     private UserEntity user;
@@ -36,6 +38,18 @@ public class ContextServiceImpl implements ContextService {
     
     public ContextServiceImpl() {
         this.appointmentsTableFilters = new HashMap<>();
+    }
+    
+    @Override
+    public Stage getLoginStage() {
+        return this.loginStage;
+    }
+    
+    @Override
+    public Stage setLoginStage(Stage loginStage) {
+        this.loginStage = loginStage;
+        
+        return this.loginStage;
     }
     
     @Override
@@ -60,18 +74,6 @@ public class ContextServiceImpl implements ContextService {
         this.user = user;
         
         return this.user;
-    }
-    
-    @Override
-    public Stage getManageStage() {
-        return this.manageStage;
-    }
-    
-    @Override
-    public Stage setManageStage(Stage manageStage) {
-        this.manageStage = manageStage;
-        
-        return this.manageStage;
     }
     
     @Override

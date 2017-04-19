@@ -131,4 +131,9 @@ public class ReminderServiceImpl implements ReminderService {
 
         return cancelled;
     }
+    
+    @Override
+    public void shutdownScheduler() {
+        this.scheduler.shutdownNow();
+    }
 }

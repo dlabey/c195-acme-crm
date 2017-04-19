@@ -11,6 +11,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
 
 import com.acme.crm.dao.AddressDAO;
+import com.acme.crm.dao.AppointmentDAO;
 import com.acme.crm.dao.CustomerDAO;
 import com.acme.crm.entities.CustomerEntity;
 import org.apache.logging.log4j.LogManager;
@@ -28,6 +29,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Inject
     private AddressDAO addressDAO;
+    
+    @Inject
+    private AppointmentDAO appointmentDAO;
 
     @Override
     public int createCustomer(String name, String address, String address2,
@@ -96,6 +100,10 @@ public class CustomerServiceImpl implements CustomerService {
                     addressId
             );
             addressPs.executeUpdate();
+            
+            PreparedStatement appointmentPs = this.appointmentDAO
+                    .deleteAppointmentsByCustomerId(customerId);
+            appointmentPs.executeUpdate();
 
             this.dbService.getConnection().commit();
 

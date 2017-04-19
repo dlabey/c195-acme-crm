@@ -333,7 +333,12 @@ public class ManageController extends MainController implements Initializable {
 
             newAppointmentStage.setTitle("New Appointment");
             newAppointmentStage.setScene(new Scene(root));
+            newAppointmentStage.setOnShown((e) -> {
+                ((NewAppointmentController) loader.getController())
+                        .populateCustomers();
+            });
         }
+        
         newAppointmentStage.show();
     }
     
@@ -585,7 +590,13 @@ public class ManageController extends MainController implements Initializable {
                             this.customerSelected.getCustomerId(),
                             this.customerSelected.getAddress().getAddressId());
             
+            if (this.contextService.getSelectedCustomer().getCustomerId() == 
+                    this.customerSelected.getCustomerId()) {
+                this.contextService.setSelectedCustomer(null);
+            }
+            
             this.customerService.loadCustomers(this.customersTable);
+            this.appointmentService.loadAppointments(this.appointmentsTable);
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());
         }

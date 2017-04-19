@@ -24,6 +24,9 @@ public interface AppointmentDAO {
     public PreparedStatement deleteAppointment(int appointmentId)
             throws SQLException;
     
+    public PreparedStatement deleteAppointmentsByCustomerId(int customerId)
+            throws SQLException;
+    
     public List<AppointmentEntity> getAppointments(Timestamp start,
             Timestamp end) throws SQLException;
     

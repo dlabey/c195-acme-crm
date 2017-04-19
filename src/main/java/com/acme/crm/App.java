@@ -1,5 +1,6 @@
 package com.acme.crm;
 
+import com.acme.crm.controllers.LoginController;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
 import javafx.fxml.FXMLLoader;
@@ -24,15 +25,8 @@ public class App {
     
     public void start(final Stage stage) throws Exception {
         LOGGER.debug("start");
-
-        mainLoader.setResources(ResourceBundle.getBundle("bundles.lang",
-                this.contextService.getLocale()));
-        mainLoader.setLocation(getClass().getResource("/ui/Login.fxml"));
         
-        Parent root = mainLoader.load();
-
-        stage.setTitle("Login");
-        stage.setScene(new Scene(root));
-        stage.show();
+        LoginController.setUp(this.contextService, this.mainLoader,
+                getClass().getResource("/ui/Login.fxml"), stage);
     }
 }

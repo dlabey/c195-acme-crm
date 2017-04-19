@@ -1,9 +1,19 @@
 package com.acme.crm.controllers;
 
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
+import java.util.Locale;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import javax.inject.Inject;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,16 +33,7 @@ import com.acme.crm.dao.UserDAO;
 import com.acme.crm.entities.UserEntity;
 import com.acme.crm.exceptions.InvalidUserException;
 import com.acme.crm.services.ContextService;
-import com.acme.crm.services.ReminderService;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,9 +50,6 @@ public class LoginController extends MainController implements Initializable {
 
     @Inject
     ContextService contextService;
-    
-    @Inject
-    ReminderService reminderService;
 
     @FXML
     private TextField usernameInput;
@@ -120,8 +118,7 @@ public class LoginController extends MainController implements Initializable {
             stage.setTitle("Manage");
             stage.setScene(new Scene(root));
             stage.show();
-            
-            this.contextService.setManageStage(stage);
+            stage.setOnCloseRequest((e) -> this.exit());
             
             this.reminderService.scheduleReminders();
         } catch (InvalidUserException ex) {
@@ -131,6 +128,34 @@ public class LoginController extends MainController implements Initializable {
         } catch (SQLException ex) {
             errorMessage.setText(this.rb.getString("Application_error"));
 
+            LOGGER.error(ex.getMessage());
+        }
+    }
+    
+    @FXML
+    private void handleEnglish(ActionEvent event) {
+        this.contextService.setLocale(new Locale("en", "EN"));
+        
+        this.contextService.getLoginStage().close();
+        
+        try {
+            LoginController.setUp(this.contextService, this.loader,
+                    getClass().getResource("/ui/Login.fxml"), new Stage());
+        } catch (IOException ex) {
+            LOGGER.error(ex.getMessage());
+        }
+    }
+    
+    @FXML
+    private void handleEspanol(ActionEvent event) {
+        this.contextService.setLocale(new Locale("es", "ES"));
+        
+        this.contextService.getLoginStage().close();
+        
+        try {
+            LoginController.setUp(this.contextService, this.loader,
+                    getClass().getResource("/ui/Login.fxml"), new Stage());
+        } catch (IOException ex) {
             LOGGER.error(ex.getMessage());
         }
     }
@@ -151,5 +176,21 @@ public class LoginController extends MainController implements Initializable {
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage());
         }
+    }
+    
+    public static void setUp(ContextService contextService,
+            FXMLLoader loader, URL resource, final Stage stage)
+            throws IOException {
+        loader.setResources(ResourceBundle.getBundle("bundles.lang",
+                contextService.getLocale()));
+        loader.setLocation(resource);
+        
+        Parent root = loader.load();
+
+        stage.setTitle("Login");
+        stage.setScene(new Scene(root));
+        stage.show();
+        
+        contextService.setLoginStage(stage);
     }
 }

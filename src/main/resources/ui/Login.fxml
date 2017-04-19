@@ -16,12 +16,12 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="Quit" />
+                                <MenuItem mnemonicParsing="false" onAction="#handleQuit" text="Quit" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Help">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="About" />
+                                <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About" />
                             </items>
                         </Menu>
                     </menus>
@@ -35,8 +35,8 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="Language">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="English" />
-                                <MenuItem mnemonicParsing="false" text="Español" />
+                                <MenuItem mnemonicParsing="false" onAction="#handleEnglish" text="English" />
+                                <MenuItem mnemonicParsing="false" onAction="#handleEspanol" text="Español" />
                             </items>
                         </Menu>
                     </menus>
