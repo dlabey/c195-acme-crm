@@ -273,7 +273,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         types.forEach(t -> {
             XYChart.Series series = new XYChart.Series();
             
-            series.setName(String.valueOf(t)); // TODO i18n
+            series.setName(String.valueOf(t));
             
             List<AppointmentTypeByMonthEntity> data =
                     appointmenTypesByMonth.stream()

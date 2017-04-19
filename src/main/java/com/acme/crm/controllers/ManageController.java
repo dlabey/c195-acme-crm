@@ -181,6 +181,7 @@ public class ManageController extends MainController implements Initializable {
         
         this.contextService.setCustomersTable(this.customersTable);
         this.contextService.setAppointmentsTable(this.appointmentsTable);
+        this.contextService.setManageController(this);
     }
     
     @FXML
@@ -621,16 +622,7 @@ public class ManageController extends MainController implements Initializable {
             }
         });
 
-        try {
-            List<YearEntity> years = new LinkedList<>();
-            
-            years.add(null);
-            years.addAll(this.dateTimeService.getYears());
-
-            this.yearInput.setItems(FXCollections.observableList(years));
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-        }
+        this.setAppointmentsTableFilters();
         
         this.monthInput.setConverter(new StringConverter<MonthEntity>() {
             @Override
@@ -655,14 +647,6 @@ public class ManageController extends MainController implements Initializable {
                 return null;
             }
         });
-
-        try {
-            List<YearEntity> years = this.dateTimeService.getYears();
-
-            this.yearInput.setItems(FXCollections.observableList(years));
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-        }
         
         TreeItem<Void> root = new TreeItem<>();
         
@@ -864,5 +848,18 @@ public class ManageController extends MainController implements Initializable {
         }
         
         return deleted;
+    }
+    
+    public void setAppointmentsTableFilters() {
+        try {
+            List<YearEntity> years = new LinkedList<>();
+            
+            years.add(null);
+            years.addAll(this.dateTimeService.getYears());
+
+            this.yearInput.setItems(FXCollections.observableList(years));
+        } catch (SQLException ex) {
+            LOGGER.error(ex.getMessage());
+        }
     }
 }

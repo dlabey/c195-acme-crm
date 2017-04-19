@@ -93,7 +93,7 @@ public class DateTimeServiceImpl implements DateTimeService {
             String monthName = new DateFormatSymbols().getMonths()[i-1];
             
             MonthEntity month = new MonthEntity();
-            month.setMonth(monthName); // TODO: i18n
+            month.setMonth(monthName);
             month.setMonthAsInt(i);
             month.setStartDateTime(startDateTime);
             month.setEndDateTime(endDateTime);
@@ -108,6 +108,7 @@ public class DateTimeServiceImpl implements DateTimeService {
     public List<WeekEntity> getWeeks(int year, int month) {
         Calendar cal = Calendar.getInstance();
         cal.setFirstDayOfWeek(Calendar.SUNDAY);
+        cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month - 1);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.HOUR_OF_DAY, 0);

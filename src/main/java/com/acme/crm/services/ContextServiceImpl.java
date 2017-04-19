@@ -1,18 +1,19 @@
 package com.acme.crm.services;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import javax.inject.Singleton;
 import javafx.scene.control.TreeTableView;
 import javafx.stage.Stage;
 
+import com.acme.crm.controllers.ManageController;
 import com.acme.crm.entities.AppointmentEntity;
 import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.entities.MonthEntity;
 import com.acme.crm.entities.UserEntity;
 import com.acme.crm.entities.WeekEntity;
 import com.acme.crm.entities.YearEntity;
-import java.util.Locale;
 
 
 @Singleton
@@ -24,7 +25,7 @@ public class ContextServiceImpl implements ContextService {
     
     private UserEntity user;
     
-    private Stage manageStage;
+    private ManageController manageController;
     
     private TreeTableView customersTable;
     
@@ -74,6 +75,18 @@ public class ContextServiceImpl implements ContextService {
         this.user = user;
         
         return this.user;
+    }
+    
+    @Override
+    public ManageController getManageController() {
+        return this.manageController;
+    }
+    
+    @Override
+    public ManageController setManageController(ManageController manageController) {
+        this.manageController = manageController;
+        
+        return this.manageController;
     }
     
     @Override

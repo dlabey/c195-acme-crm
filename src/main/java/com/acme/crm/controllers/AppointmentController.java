@@ -162,6 +162,9 @@ public abstract class AppointmentController extends MainController
                 
                 ((Node) event.getSource()).getScene().getWindow().hide();
                 
+                this.contextService.getManageController()
+                        .setAppointmentsTableFilters();
+                
                 this.reminderService.scheduleReminders();
             }
         } catch (InvalidAppointmentException | OverlappingAppointmentException ex) {

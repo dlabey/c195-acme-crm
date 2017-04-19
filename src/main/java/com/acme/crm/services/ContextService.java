@@ -5,6 +5,7 @@ import java.util.Map;
 import javafx.scene.control.TreeTableView;
 import javafx.stage.Stage;
 
+import com.acme.crm.controllers.ManageController;
 import com.acme.crm.entities.AppointmentEntity;
 import com.acme.crm.entities.CustomerEntity;
 import com.acme.crm.entities.MonthEntity;
@@ -25,6 +26,10 @@ public interface ContextService {
     public UserEntity getUser();
     
     public UserEntity setUser(UserEntity user);
+    
+    public ManageController getManageController();
+    
+    public ManageController setManageController(ManageController manageController);
     
     public TreeTableView getCustomersTable();
     
