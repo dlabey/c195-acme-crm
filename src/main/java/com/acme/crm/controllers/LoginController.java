@@ -178,6 +178,15 @@ public class LoginController extends MainController implements Initializable {
         }
     }
     
+    /**
+     * setUp
+     * A static method for setup because of language switching
+     * @param contextService
+     * @param loader
+     * @param resource
+     * @param stage
+     * @throws IOException 
+     */
     public static void setUp(ContextService contextService,
             FXMLLoader loader, URL resource, final Stage stage)
             throws IOException {

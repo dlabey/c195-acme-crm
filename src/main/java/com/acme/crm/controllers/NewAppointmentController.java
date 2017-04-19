@@ -26,6 +26,7 @@ public class NewAppointmentController extends AppointmentController {
     protected void handleSubmit(MouseEvent event) throws Exception {
         LOGGER.debug("handleSubmit");
         
+        // uses a callback pattern with lambdas for avoiding repeat of code
         super.handleSubmit(event, () -> {
             LOGGER.debug("childHandler");
             

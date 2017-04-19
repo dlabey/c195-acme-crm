@@ -35,6 +35,11 @@ import com.acme.crm.dao.UserDAOImpl;
 import com.google.inject.AbstractModule;
 import com.gluonhq.ignite.guice.GuiceContext;
 
+/**
+ * ACME CRM
+ * A CRM for ACME managing customers and appointments
+ * @author darren
+ */
 public class Main extends Application {
     
     private final GuiceContext guiceContext = new GuiceContext(this, () -> Arrays.asList(new GuiceModule()));
@@ -47,12 +52,17 @@ public class Main extends Application {
         guiceContext.init();
         app.start(stage);
     }
-
+    
     public static void main(String[] args) {
         launch(args);
     }
 }
 
+/**
+ * GuiceModule
+ * Handles dependency injection for proper reuse throughout the application
+ * @author darren
+ */
 class GuiceModule extends AbstractModule {
     @Override
     protected void configure() {

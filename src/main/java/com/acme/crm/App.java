@@ -1,11 +1,8 @@
 package com.acme.crm;
 
 import com.acme.crm.controllers.LoginController;
-import java.util.ResourceBundle;
 import javax.inject.Inject;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import com.acme.crm.services.ContextService;
@@ -26,6 +23,7 @@ public class App {
     public void start(final Stage stage) throws Exception {
         LOGGER.debug("start");
         
+        // setup the login user interface
         LoginController.setUp(this.contextService, this.mainLoader,
                 getClass().getResource("/ui/Login.fxml"), stage);
     }

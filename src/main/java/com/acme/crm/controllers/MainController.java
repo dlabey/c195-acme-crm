@@ -60,6 +60,10 @@ public class MainController implements Initializable {
         alert.show();
     }
     
+    /**
+     * exit
+     * Exits the application properly shutting down the scheduler thread
+     */
     protected void exit() {
         this.reminderService.shutdownScheduler();
                     

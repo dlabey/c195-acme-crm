@@ -27,6 +27,11 @@ import com.acme.crm.entities.YearEntity;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 
+/**
+ * DateTimeServiceImpl
+ * This class uses datetime ranges for working with different time zones
+ * @author darren
+ */
 public class DateTimeServiceImpl implements DateTimeService {
 
     @Inject
