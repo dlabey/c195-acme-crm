@@ -45,3 +45,7 @@ adjustments in their time zone.
 ## Reminders
 
 A reminder is created and updated when an appointment is created and updated. It is created and set for 15 minutes before the appointment. On login and appointment creation and updating it will be scheduled/rescheduled for display 15 minutes before the appointment transparently conforming to the user's time zone.
+
+## Auditing
+
+Logins are stored at the top-level directory of the project in logins.txt with a UTC timestamp.
