@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="280.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.acme.crm.controllers.LoginController">
+    <children>
+        <HBox prefHeight="29.0" prefWidth="350.0">
+            <children>
+                <MenuBar>
+                    <menus>
+                        <Menu mnemonicParsing="false" text="File">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#handleQuit" text="Quit" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Help">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+                <MenuBar prefHeight="29.0" prefWidth="145.0" HBox.hgrow="ALWAYS">
+                    <menus>
+                        <Menu disable="true" mnemonicParsing="false" />
+                    </menus>
+                </MenuBar>
+                <MenuBar>
+                    <menus>
+                        <Menu mnemonicParsing="false" text="Language">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#handleEnglish" text="English" />
+                                <MenuItem mnemonicParsing="false" onAction="#handleEspanol" text="Español" />
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+            </children>
+        </HBox>
+        <VBox layoutX="123.0" layoutY="44.0" onKeyPressed="#handleKeyPress" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
+            <children>
+            <TextFlow textAlignment="CENTER">
+               <children>
+                      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%Login">
+                          <font>
+                              <Font name="System Bold" size="18.0" />
+                          </font>
+                      </Text>
+               </children>
+            </TextFlow>
+                <Label onMouseClicked="#handleUsernameLabelClick" text="%Username" />
+                <TextField fx:id="usernameInput" />
+                <Label onMouseClicked="#handlePasswordLabelClick" text="%Password" />
+                <PasswordField fx:id="passwordInput" />
+                <Button mnemonicParsing="false" onMouseClicked="#handleLogin" text="%Login">
+                    <VBox.margin>
+                        <Insets top="5.0" />
+                    </VBox.margin>
+                </Button>
+            <TextFlow textAlignment="CENTER">
+               <children>
+                    <Text fx:id="errorMessage" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="*" textAlignment="CENTER" />
+               </children>
+            </TextFlow>
+            </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+        </VBox>
+    </children>
+</AnchorPane>
