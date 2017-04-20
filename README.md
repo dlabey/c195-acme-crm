@@ -6,11 +6,16 @@ company that has multiple offices that need to manage customers and their
 appointments. Time is military time. Dates and time are put into the database in
 UTC and displayed locally. Notable code is commented.
 
-## Maven Install
+## Test User
+
+Username: test 
+Password: test
+
+## Install Dependencies Manually
 
 ```mvn clean install```
 
-## Maven Native Installer Creator
+## Native Installer Creator
 
 ```mvn jfx:native```
 

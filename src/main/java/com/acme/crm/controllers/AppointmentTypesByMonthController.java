@@ -34,7 +34,9 @@ public class AppointmentTypesByMonthController extends MainController
         
         this.appointmentTypesStackBarChart.getXAxis().setLabel("Month");
         this.appointmentTypesStackBarChart.getYAxis().setLabel("Count");
-        
+    }
+    
+    public void populateAppointmentTypesByMonth() {
         List<XYChart.Series> seriesList = new LinkedList<>();
         
         try {
@@ -44,6 +46,6 @@ public class AppointmentTypesByMonthController extends MainController
             LOGGER.error(ex.getMessage());
         }
         
-        this.appointmentTypesStackBarChart.getData().addAll(seriesList);
+        this.appointmentTypesStackBarChart.getData().setAll(seriesList);
     }
 }

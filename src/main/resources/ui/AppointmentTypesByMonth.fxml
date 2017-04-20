@@ -34,7 +34,7 @@
                 </MenuBar>
             </children>
         </HBox>
-      <StackedBarChart fx:id="appointmentTypesStackBarChart" prefHeight="430.0" prefWidth="600.0" title="Appointment Types by Month" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
+      <StackedBarChart fx:id="appointmentTypesStackBarChart" animated="false" prefHeight="430.0" prefWidth="600.0" title="Appointment Types by Month" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>

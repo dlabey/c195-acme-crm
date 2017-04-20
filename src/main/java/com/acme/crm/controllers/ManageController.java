@@ -201,6 +201,10 @@ public class ManageController extends MainController implements Initializable {
 
             appointmentTypesByMonthStage.setTitle("Report");
             appointmentTypesByMonthStage.setScene(new Scene(root));
+            appointmentTypesByMonthStage.setOnShown((e) -> {
+                ((AppointmentTypesByMonthController) loader.getController())
+                        .populateAppointmentTypesByMonth();
+            });
         }
         
         appointmentTypesByMonthStage.show();
